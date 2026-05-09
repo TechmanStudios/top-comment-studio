@@ -14,10 +14,10 @@ Use this as the shared task board for humans and AI agents.
 | Status | Task | Notes |
 |---|---|---|
 | done | Identify stack and package manager | Recommended next-phase stack: Python/FastAPI/uv; implementation not added yet |
-| blocked | Verify local install command | Blocked until stack is selected |
-| blocked | Verify dev command | Blocked until app entry point exists |
-| blocked | Verify build command | Blocked until package manifest exists |
-| blocked | Verify test command | Blocked until test framework exists |
+| done | Verify local install command | `uv sync` |
+| done | Verify dev command | `uv run uvicorn top_comment_studio.app:app --reload` |
+| done | Verify build command | No separate build command needed yet |
+| done | Verify test command | `uv run pytest` |
 | done | Create or update `.env.example` | Runway placeholders added; no real secrets |
 | done | Run `scripts/agent_repo_audit.py` | Generated local `AI_REPO_AUDIT.md`, ignored by git |
 | done | Create public GitHub repo | Created `https://github.com/TechmanStudios/top-comment-studio` as a public repository; local `origin` is configured |
@@ -29,7 +29,7 @@ Use this as the shared task board for humans and AI agents.
 | Status | Task | Notes |
 |---|---|---|
 | todo | Define MVP user flow | Keep demo-focused |
-| todo | Add Python/FastAPI scaffold | See `docs/NEXT_PHASE_BUILD_PLAN.md` |
+| done | Add Python/FastAPI scaffold | FastAPI app, templates, storage, sample data, and smoke tests added |
 | todo | Implement smallest end-to-end path | Avoid premature abstractions |
 | todo | Design Runway workflow chain | Use app Workflows for storyboard, video draft, and optional audio steps |
 | todo | Add smoke test or validation check | Prefer simple and fast |
@@ -94,4 +94,12 @@ YYYY-MM-DD — Agent:
 - Validation: Repo status was clean before edits; setup gaps are now explicit in README, architecture, inventory, known issues, and next-phase plan.
 - Blockers: The app is not runnable until the implementation scaffold is added.
 - Next step: Add `pyproject.toml`, `src/top_comment_studio/`, first manual comment route, JSON chain storage, and a pytest smoke test.
+```
+
+```text
+2026-05-09 — GitHub Copilot:
+- Summary: Added the first runnable FastAPI scaffold with manual comment input, guardrail review, deterministic Shorts package generation, local JSON chain storage, sample data, and pytest smoke tests.
+- Validation: `uv sync`, `uv run pytest`, app health check, and `python scripts/agent_repo_audit.py` passed.
+- Blockers: Runway Workflow submission is still manual; no paid API calls are made by the scaffold.
+- Next step: Create or choose the first Runway custom workflow endpoint and wire a creator-approved submit action.
 ```

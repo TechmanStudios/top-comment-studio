@@ -36,6 +36,7 @@ User
 |---|---|
 | `README.md` | Local setup and contributor instructions |
 | `.env.example` | Safe placeholder environment variables |
+| `pyproject.toml` | Python package, dependencies, scripts, and pytest config |
 | `AGENTS.md` | AI agent operating instructions |
 | `TASKS.md` | Hackathon task board |
 | `KNOWN_ISSUES.md` | Current issues and limitations |
@@ -52,7 +53,8 @@ Provider:
 Model(s):
 
 - Runway custom workflows from the Techman Studios workflow endpoint registry.
-- Candidate media models: Gen-4.5, Gen-4 Image/Turbo, Seedance 2, Veo 3/3.1, ElevenLabs audio tools.
+- Preferred workflow stack: GPT 5.5 for text generation, OpenAI Images 2.0 for image generation, and Seedance 2.0 for video generation.
+- Candidate supporting media models: Gen-4.5, Gen-4 Image/Turbo, Veo 3/3.1, ElevenLabs audio tools.
 
 Prompt locations:
 
@@ -82,14 +84,17 @@ Required environment variables:
 
 Build command:
 
-- None yet. Add once the app scaffold exists.
+- No separate build command yet.
 
 Start command:
 
-- Planned: `uv run uvicorn top_comment_studio.app:app --reload`
+- `uv run uvicorn top_comment_studio.app:app --reload`
+
+Test command:
+
+- `uv run pytest`
 
 ## Open Questions
 
-- [ ] Confirm whether `uv` is acceptable as the package manager for the first Python scaffold.
 - [ ] Decide whether the first demo calls Runway directly or exports prompts for manual Runway workflow execution.
 - [ ] Choose the first custom Runway Workflow template to clone or build from scratch.

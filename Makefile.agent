@@ -1,7 +1,16 @@
 # Optional helper commands for AI agents.
 # This file is intentionally separate from Makefile to avoid overriding project conventions.
 
-.PHONY: audit
+.PHONY: audit sync dev test
 
 audit:
 	python scripts/agent_repo_audit.py
+
+sync:
+	uv sync
+
+dev:
+	uv run uvicorn top_comment_studio.app:app --reload
+
+test:
+	uv run pytest

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ record.episode_id }} · {{ settings.app_name }}</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="header">
+      <p class="eyebrow">Draft package saved to {{ saved_path }}</p>
+      <h1>{{ record.title }}</h1>
+      <p>{{ record.summary }}</p>
+      <a href="/" class="button-link">Create another</a>
+    </section>
+
+    <section class="panel status-{{ record.guardrail.status }}">
+      <h2>Guardrail review</h2>
+      <p><strong>{{ record.guardrail.status }}</strong></p>
+      <p>{{ record.guardrail.reason }}</p>
+      <p>{{ record.guardrail.safe_interpretation }}</p>
+    </section>
+
+    <section class="panel">
+      <h2>Shorts package</h2>
+      <dl>
+        <dt>Hook</dt>
+        <dd>{{ record.package.hook }}</dd>
+        <dt>Script</dt>
+        <dd>{{ record.package.script }}</dd>
+        <dt>Visual prompt</dt>
+        <dd>{{ record.package.visual_prompt }}</dd>
+        <dt>Video prompt</dt>
+        <dd>{{ record.package.video_prompt }}</dd>
+        <dt>Next CTA</dt>
+        <dd>{{ record.package.next_cta }}</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>Workflow model stack</h2>
+      <ul>
+        <li>Text: {{ record.package.workflow_model_stack.llm_text_generation }}</li>
+        <li>Images: {{ record.package.workflow_model_stack.image_generation }}</li>
+        <li>Video: {{ record.package.workflow_model_stack.video_generation }}</li>
+      </ul>
+      <p><a href="{{ record.package.workflow_model_stack.workflow_registry_url }}">Open workflow endpoint registry</a></p>
+    </section>
+  </main>
+</body>
+</html>

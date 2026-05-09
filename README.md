@@ -4,7 +4,7 @@ Top Comment Studio is a weekend hackathon project for turning audience comments 
 
 ## Current Status
 
-This repository is in project setup mode. It currently contains planning docs, guardrails, prompt templates, YouTube notes, and agent workflow instructions. There is not yet an app framework, package manifest, build script, or test command.
+This repository now has the first runnable FastAPI scaffold for the manual comment-to-Shorts-package flow. The app generates deterministic draft packages locally and does not call paid Runway or LLM APIs yet.
 
 ## Local Setup
 
@@ -12,9 +12,24 @@ This repository is in project setup mode. It currently contains planning docs, g
 git clone https://github.com/TechmanStudios/top-comment-studio.git
 cd top-comment-studio
 Copy-Item .env.example .env
+uv sync
 ```
 
 Fill in local values in `.env`. Never commit `.env` or real credentials.
+
+## Run The App
+
+```powershell
+uv run uvicorn top_comment_studio.app:app --reload
+```
+
+Then open http://127.0.0.1:8000.
+
+## Run Tests
+
+```powershell
+uv run pytest
+```
 
 ## Environment Variables
 
@@ -26,11 +41,13 @@ Fill in local values in `.env`. Never commit `.env` or real credentials.
 | `RUNWAYML_API_SECRET` | Server-side Runway API bearer token. |
 | `RUNWAYML_API_BASE_URL` | Runway API base URL. |
 | `RUNWAYML_API_VERSION` | Runway API version header. |
+| `RUNWAY_WORKFLOW_REGISTRY_URL` | Developer Portal page where custom workflow endpoints appear. |
 | `OPENAI_API_KEY` | Optional LLM provider key for future script/prompt generation. |
 | `DATABASE_URL` | Optional storage backend once the app needs persistent state. |
 | `PORT` | Local web server port once an app exists. |
 | `HOST` | Local web server host once an app exists. |
 | `NEXT_PUBLIC_APP_URL` | Public app URL for a future web frontend. |
+| `TOP_COMMENT_STUDIO_DATA_DIR` | Local JSON storage root for generated chain records. |
 
 ## Useful Docs
 
@@ -53,14 +70,13 @@ The repo includes a lightweight audit script:
 python scripts/agent_repo_audit.py
 ```
 
-At the moment, the audit correctly reports that no app stack, package manifest, entry point, build command, dev command, or test command has been implemented yet.
+The audit should now detect the Python stack and `pyproject.toml`.
 
 ## Next Best Build Step
 
-Use the recommended Python/FastAPI plan in [docs/NEXT_PHASE_BUILD_PLAN.md](docs/NEXT_PHASE_BUILD_PLAN.md), then add the smallest runnable vertical slice:
+The first vertical slice is in place. The next build step is to connect the deterministic package output to a Runway Workflow endpoint behind explicit creator approval:
 
-1. Manual comment input.
-2. Guardrail check.
-3. Generated Short package.
-4. Series-chain record.
-5. Exportable Runway prompt package.
+1. Capture the custom workflow endpoint name.
+2. Map the package fields to workflow inputs.
+3. Add a dry-run preview before any paid generation.
+4. Add an explicit creator-approved Runway submit action.

@@ -17,12 +17,12 @@ Status:
 
 ## Current Issues
 
-### App Scaffold Not Implemented
+### Runway Workflow Submit Not Implemented
 
-Issue: A recommended Python/FastAPI/uv stack is documented, but no app framework, package manifest, entry point, dev command, build command, or test command has been implemented yet.
-Impact: Fresh-clone run instructions are still limited to documentation review and the audit script.
-Reproduction: Run `python scripts/agent_repo_audit.py` from the repo root.
-Current workaround: Follow `docs/NEXT_PHASE_BUILD_PLAN.md` to add the first implementation scaffold.
+Issue: The app generates local draft packages, but does not submit jobs to Runway yet.
+Impact: The demo can show comment-to-package generation, but media generation still requires manual Runway workflow execution.
+Reproduction: Generate a package from the web form and inspect the workflow model stack output.
+Current workaround: Copy the generated prompts into the Runway app workflow manually until the endpoint integration is implemented.
 Owner: Bryan / project team.
 Status: open
 

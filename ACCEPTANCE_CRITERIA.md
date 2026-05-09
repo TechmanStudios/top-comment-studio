@@ -20,7 +20,7 @@ Use this to keep hackathon work grounded.
 - [x] Runway docs, model catalog, workflows, and endpoint registry are documented.
 - [x] Recommended first implementation stack is documented.
 - [x] Next-phase build plan exists.
-- [ ] Runnable app scaffold exists.
+- [x] Runnable app scaffold exists.
 
 ## MVP Is Done When
 

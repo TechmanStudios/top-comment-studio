@@ -88,3 +88,15 @@ Alternatives considered: Next.js full-stack app, separate React frontend with Py
 Tradeoffs: A server-rendered UI is less flashy than a full SPA, but it gets the audience-comment-to-package loop running faster with fewer moving pieces.
 
 Follow-up: Add the scaffold and real commands in the next phase, then update README once `uv sync`, dev, and test commands exist.
+
+### 2026-05-09 — First Workflow Model Stack
+
+Decision: Use GPT 5.5 for LLM text generation, OpenAI Images 2.0 for image generation, and Seedance 2.0 for video generation in the first custom Runway workflow design.
+
+Why: This stack matches Bryan's preferred workflow direction and keeps the first integration focused on text-to-visual-to-video production.
+
+Alternatives considered: Gen-4.5 video, Gen-4 Image/Turbo, Gemini image models, and Veo 3/3.1.
+
+Tradeoffs: The scaffold records the requested model stack but does not call paid APIs until an explicit creator-approved submit path exists.
+
+Follow-up: Confirm exact endpoint model identifiers from the Runway workflow registry after the custom workflow is created.

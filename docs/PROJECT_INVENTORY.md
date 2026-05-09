@@ -13,10 +13,10 @@ Generated during setup on 2026-05-09.
 - Primary language: Python recommended for next phase.
 - Framework: FastAPI recommended for next phase.
 - Package manager: `uv` recommended for next phase.
-- App entry point: Not present yet.
-- Build command: Not present yet.
-- Dev command: Not present yet.
-- Test command: Not present yet.
+- App entry point: `src/top_comment_studio/app.py`.
+- Build command: None yet.
+- Dev command: `uv run uvicorn top_comment_studio.app:app --reload`.
+- Test command: `uv run pytest`.
 
 ## Existing Organization
 
@@ -46,6 +46,8 @@ Generated during setup on 2026-05-09.
 - `.editorconfig`
 - `.env.example`
 - `.gitignore`
+- `pyproject.toml`
+- `uv.lock`
 - `.github/copilot-instructions.md`
 - `.github/pull_request_template.md`
 - `.github/ISSUE_TEMPLATE/bug_report.md`
@@ -69,6 +71,20 @@ Generated during setup on 2026-05-09.
 - `scripts/agent_repo_audit.py`
 - `Makefile.agent`
 
+### Implementation scaffold
+
+- `src/top_comment_studio/app.py`
+- `src/top_comment_studio/settings.py`
+- `src/top_comment_studio/schemas.py`
+- `src/top_comment_studio/guardrails.py`
+- `src/top_comment_studio/package_generator.py`
+- `src/top_comment_studio/storage.py`
+- `src/top_comment_studio/runway/`
+- `src/top_comment_studio/templates/`
+- `src/top_comment_studio/static/`
+- `data/samples/sample_comments.json`
+- `tests/test_smoke_comment_to_package.py`
+
 ## Generated Local Files
 
 - `.env`: local-only environment variables. Ignored by git.
@@ -90,8 +106,6 @@ Generated during setup on 2026-05-09.
 
 ## Setup Gaps To Resolve
 
-- Add the recommended Python/FastAPI/uv scaffold.
-- Add package manifest and dependency manager files.
-- Add app entry point.
-- Add dev/build/test commands.
-- Add at least one smoke validation for the MVP flow.
+- Capture the first custom Runway Workflow endpoint name and schema.
+- Add explicit creator-approved Runway submit action.
+- Add error handling for Runway API failures once API calls are enabled.

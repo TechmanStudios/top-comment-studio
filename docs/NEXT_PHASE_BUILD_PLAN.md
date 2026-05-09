@@ -31,13 +31,19 @@ This keeps the first implementation Python-first, simple to run, easy for agents
 
 ## First Implementation Slice
 
-1. Add `pyproject.toml` with FastAPI, Uvicorn, Pydantic, python-dotenv, httpx, Jinja2, and pytest.
-2. Add `src/top_comment_studio/` with app entrypoint, schemas, guardrail rules, package generator, and JSON chain storage.
-3. Add a single page or route for manual comment input.
-4. Generate a deterministic draft package first, with optional LLM/Runway calls behind explicit buttons or later flags.
-5. Save generated episodes under `data/chains/main/` and keep sample data safe to commit.
-6. Add one smoke test that verifies a sample comment produces a safe package and chain record.
-7. Update README with real install/dev/test commands.
+1. Done: add `pyproject.toml` with FastAPI, Uvicorn, Pydantic, python-dotenv, httpx, Jinja2, and pytest.
+2. Done: add `src/top_comment_studio/` with app entrypoint, schemas, guardrail rules, package generator, and JSON chain storage.
+3. Done: add a single page and route for manual comment input.
+4. Done: generate a deterministic draft package first, with optional LLM/Runway calls deferred behind explicit later buttons.
+5. Done: save generated episodes under ignored local JSON storage.
+6. Done: add a smoke test that verifies a sample comment produces a safe package and chain record.
+7. Done: update README with real install/dev/test commands.
+
+## Current Workflow Model Stack
+
+- Text generation in workflows: GPT 5.5
+- Image generation in workflows: OpenAI Images 2.0
+- Video generation in workflows: Seedance 2.0
 
 ## Initial Commands To Add
 

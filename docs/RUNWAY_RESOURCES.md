@@ -66,6 +66,12 @@ The Runway app has a node-based Workflows area for chaining models and intermedi
 
 Initial workflow direction: create a custom workflow that takes a reviewed top-comment creative seed, generates storyboard panels or reference images, produces a vertical video draft, and optionally adds voiceover/sound effects after creator approval.
 
+Preferred workflow model stack for the first custom workflow:
+
+- LLM text generation: GPT 5.5
+- Image generation: OpenAI Images 2.0
+- Video generation: Seedance 2.0
+
 When a custom workflow is created in the Runway app, its API endpoint should appear in the Developer Portal workflow endpoint list for the Techman Studios organization:
 
 - https://dev.runwayml.com/organization/8f8366b8-b7b6-4f9c-baae-f72c16c9f79f/workflows
