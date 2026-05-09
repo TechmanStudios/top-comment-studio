@@ -170,38 +170,37 @@ top-comment-studio/
   README.md
   PROJECT_TIMELINE.md
   .env.example
+  pyproject.toml
 
-  apps/
-    web/
-      app/
-      components/
-      lib/
-      public/
-
-  services/
-    api/
-      main.py
-      requirements.txt
-
-      agents/
-        comment_scout.py
-        creative_strategist.py
-        director.py
-        cinematographer.py
-        editor.py
-        schemas.py
+  src/
+    top_comment_studio/
+      app.py
+      settings.py
+      schemas.py
+      guardrails.py
+      package_generator.py
+      storage.py
 
       runway/
         client.py
+        workflows.py
         prompts.py
 
-      openai_agent/
-        director_instructions.md
-        output_schema.json
+      templates/
+        index.html
+        package.html
 
-      examples/
-        sample_comments.json
-        sample_outputs.json
+      static/
+        app.css
+        app.js
+
+  data/
+    samples/
+      sample_comments.json
+      sample_packages.json
+
+  tests/
+    test_smoke_comment_to_package.py
 ```
 
 ---

@@ -76,3 +76,15 @@ Alternatives considered: Keeping endpoint URLs only in browser history or chat n
 Tradeoffs: The organization ID is now documented, but no secrets or session cookies are included.
 
 Follow-up: Document each created workflow's input schema, output schema, and endpoint name once available.
+
+### 2026-05-09 — First MVP Implementation Stack
+
+Decision: Use Python 3.12+, FastAPI, Jinja templates, local JSON storage, pytest, and `uv` for the first runnable MVP scaffold.
+
+Why: The repo guidance prefers Python for new scaffolds, and this stack keeps the hackathon demo simple, inspectable, and server-side safe for Runway API calls.
+
+Alternatives considered: Next.js full-stack app, separate React frontend with Python API, or CLI-only prototype.
+
+Tradeoffs: A server-rendered UI is less flashy than a full SPA, but it gets the audience-comment-to-package loop running faster with fewer moving pieces.
+
+Follow-up: Add the scaffold and real commands in the next phase, then update README once `uv sync`, dev, and test commands exist.

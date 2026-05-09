@@ -17,14 +17,16 @@ Status:
 
 ## Current Issues
 
-### Stack Not Selected
+### App Scaffold Not Implemented
 
-Issue: No app framework, package manager, entry point, dev command, build command, or test command exists yet.
-Impact: Fresh-clone run instructions are limited to documentation review and the audit script.
+Issue: A recommended Python/FastAPI/uv stack is documented, but no app framework, package manifest, entry point, dev command, build command, or test command has been implemented yet.
+Impact: Fresh-clone run instructions are still limited to documentation review and the audit script.
 Reproduction: Run `python scripts/agent_repo_audit.py` from the repo root.
-Current workaround: Choose the MVP stack before adding implementation code.
+Current workaround: Follow `docs/NEXT_PHASE_BUILD_PLAN.md` to add the first implementation scaffold.
 Owner: Bryan / project team.
 Status: open
+
+## Resolved Issues
 
 ### GitHub Repo Creation Permission
 

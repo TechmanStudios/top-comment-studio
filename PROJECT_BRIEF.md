@@ -47,15 +47,15 @@ Out of scope for hackathon:
 
 Frontend:
 
-- TODO
+- FastAPI server-rendered UI with Jinja templates and vanilla CSS/JavaScript for the first demo.
 
 Backend:
 
-- TODO
+- Python 3.12+ with FastAPI.
 
 Database/storage:
 
-- TODO
+- Local JSON files for MVP chain records and generated packages. Consider SQLite only after the first vertical slice works.
 
 AI/model providers:
 
@@ -64,7 +64,7 @@ AI/model providers:
 
 Deployment target:
 
-- TODO
+- Local demo first. Choose a lightweight deploy target after the MVP route and validation command exist.
 
 ## Required Secrets
 

@@ -13,7 +13,7 @@ Use this as the shared task board for humans and AI agents.
 
 | Status | Task | Notes |
 |---|---|---|
-| done | Identify stack and package manager | No app stack or package manager selected yet |
+| done | Identify stack and package manager | Recommended next-phase stack: Python/FastAPI/uv; implementation not added yet |
 | blocked | Verify local install command | Blocked until stack is selected |
 | blocked | Verify dev command | Blocked until app entry point exists |
 | blocked | Verify build command | Blocked until package manifest exists |
@@ -22,12 +22,14 @@ Use this as the shared task board for humans and AI agents.
 | done | Run `scripts/agent_repo_audit.py` | Generated local `AI_REPO_AUDIT.md`, ignored by git |
 | done | Create public GitHub repo | Created `https://github.com/TechmanStudios/top-comment-studio` as a public repository; local `origin` is configured |
 | done | Ignore local browser session exports | Cookie/session/auth-state patterns added to `.gitignore` |
+| done | Recommend MVP stack | Python/FastAPI/uv documented for the first implementation phase |
 
 ## MVP
 
 | Status | Task | Notes |
 |---|---|---|
 | todo | Define MVP user flow | Keep demo-focused |
+| todo | Add Python/FastAPI scaffold | See `docs/NEXT_PHASE_BUILD_PLAN.md` |
 | todo | Implement smallest end-to-end path | Avoid premature abstractions |
 | todo | Design Runway workflow chain | Use app Workflows for storyboard, video draft, and optional audio steps |
 | todo | Add smoke test or validation check | Prefer simple and fast |
@@ -84,4 +86,12 @@ YYYY-MM-DD — Agent:
 - Validation: Confirmed the URL is recorded in `docs/RUNWAY_RESOURCES.md`.
 - Blockers: None.
 - Next step: After creating the first custom workflow, capture its endpoint name and expected inputs/outputs in the workflow design docs.
+```
+
+```text
+2026-05-09 — GitHub Copilot:
+- Summary: Completed a final setup-readiness pass and documented the recommended Python/FastAPI/uv next-phase plan.
+- Validation: Repo status was clean before edits; setup gaps are now explicit in README, architecture, inventory, known issues, and next-phase plan.
+- Blockers: The app is not runnable until the implementation scaffold is added.
+- Next step: Add `pyproject.toml`, `src/top_comment_studio/`, first manual comment route, JSON chain storage, and a pytest smoke test.
 ```

@@ -57,5 +57,20 @@ build/
 out/
 coverage/
 
+# Local/generated app data and media
+outputs/
+exports/
+generated/
+runtime/
+data/local/
+data/generated/
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.mp3
+*.wav
+*.m4a
+
 # Local generated reports
 AI_REPO_AUDIT.md

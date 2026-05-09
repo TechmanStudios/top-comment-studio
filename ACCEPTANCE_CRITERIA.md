@@ -11,6 +11,17 @@ Use this to keep hackathon work grounded.
 - [ ] At least one validation command exists and is documented.
 - [ ] Known setup issues are documented.
 
+## Pre-Build Setup Is Ready When
+
+- [x] Project name and pitch are documented.
+- [x] Public GitHub repository exists.
+- [x] Safe `.env.example` exists.
+- [x] Real secrets and browser session exports are ignored.
+- [x] Runway docs, model catalog, workflows, and endpoint registry are documented.
+- [x] Recommended first implementation stack is documented.
+- [x] Next-phase build plan exists.
+- [ ] Runnable app scaffold exists.
+
 ## MVP Is Done When
 
 - [ ] The primary user flow works end-to-end.

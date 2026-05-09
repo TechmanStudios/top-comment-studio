@@ -10,9 +10,9 @@ Generated during setup on 2026-05-09.
 
 ## Detected Stack
 
-- Primary language: Not selected yet.
-- Framework: Not selected yet.
-- Package manager: Not selected yet.
+- Primary language: Python recommended for next phase.
+- Framework: FastAPI recommended for next phase.
+- Package manager: `uv` recommended for next phase.
 - App entry point: Not present yet.
 - Build command: Not present yet.
 - Dev command: Not present yet.
@@ -59,6 +59,7 @@ Generated during setup on 2026-05-09.
 - `docs/AI_WORKFLOW.md`
 - `docs/ARCHITECTURE.md`
 - `docs/DEMO_SCRIPT.md`
+- `docs/NEXT_PHASE_BUILD_PLAN.md`
 - `docs/PROJECT_INVENTORY.md`
 - `docs/RUNWAY_RESOURCES.md`
 
@@ -89,7 +90,7 @@ Generated during setup on 2026-05-09.
 
 ## Setup Gaps To Resolve
 
-- Choose implementation stack.
+- Add the recommended Python/FastAPI/uv scaffold.
 - Add package manifest and dependency manager files.
 - Add app entry point.
 - Add dev/build/test commands.

@@ -4,31 +4,31 @@ Use this to shape the final presentation.
 
 ## Demo Title
 
-`TODO: Project name`
+Top Comment Studio
 
 ## Opening Pitch
 
-`TODO: One or two sentences explaining the problem and the solution.`
+Most AI video tools start with a blank prompt. Top Comment Studio starts with the audience: it turns the top safe comment into a creator-reviewed Shorts package and Runway-ready production direction.
 
 ## Target User
 
-`TODO: Who is this for?`
+Short-form creators who want their audience to help choose what gets made next without giving up creative control.
 
 ## Demo Flow
 
-1. Show the starting screen.
-2. Explain the user problem.
-3. Perform the core action.
-4. Show the AI-powered or key result.
-5. Explain why the result matters.
-6. Mention what is real now vs. planned next.
+1. Paste a selected audience comment from the previous Short.
+2. Show the guardrail result and safe creative interpretation.
+3. Generate the next Shorts package: hook, script, title ideas, CTA, visual prompt, and Runway video prompt.
+4. Save the package into the series-chain record.
+5. Show the Runway workflow/API handoff path for generating assets.
+6. Explain what is automated now and what still requires Bryan's approval.
 
 ## Happy Path
 
 ```text
-Input:
-Expected output:
-What to say:
+Input: "Make the AI build a floating city powered by storms."
+Expected output: Approved creative interpretation, 30-45 second Shorts script, vertical video prompt, thumbnail idea, next CTA, and episode record.
+What to say: "The audience gave us the direction. The system made it safe, structured it for Shorts, and prepared it for Runway without auto-publishing anything."
 ```
 
 ## Backup Plan
@@ -50,4 +50,4 @@ If the live demo fails:
 
 ## Final 20-Second Close
 
-`TODO: Crisp closing statement.`
+Top Comment Studio makes the audience part of the production loop. Each Short asks the community what should happen next, and the system turns the strongest safe signal into a creator-approved Runway-ready package.

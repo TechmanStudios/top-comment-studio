@@ -43,6 +43,7 @@ Start with these files:
 - [COMMENT_SELECTION_POLICY.md](COMMENT_SELECTION_POLICY.md)
 - [docs/RUNWAY_RESOURCES.md](docs/RUNWAY_RESOURCES.md)
 - [docs/PROJECT_INVENTORY.md](docs/PROJECT_INVENTORY.md)
+- [docs/NEXT_PHASE_BUILD_PLAN.md](docs/NEXT_PHASE_BUILD_PLAN.md)
 
 ## Validation
 
@@ -52,11 +53,11 @@ The repo includes a lightweight audit script:
 python scripts/agent_repo_audit.py
 ```
 
-At the moment, the audit correctly reports that the stack, package manager, app entry point, build command, dev command, and test command are still undecided.
+At the moment, the audit correctly reports that no app stack, package manifest, entry point, build command, dev command, or test command has been implemented yet.
 
 ## Next Best Build Step
 
-Pick the implementation stack for the weekend MVP, then add the smallest runnable vertical slice:
+Use the recommended Python/FastAPI plan in [docs/NEXT_PHASE_BUILD_PLAN.md](docs/NEXT_PHASE_BUILD_PLAN.md), then add the smallest runnable vertical slice:
 
 1. Manual comment input.
 2. Guardrail check.
