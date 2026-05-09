@@ -2,6 +2,25 @@
 .env
 .env.*
 !.env.example
+*.secret
+*.secrets
+*.token
+*.tokens
+*.credential
+*.credentials
+
+# Local browser/session exports
+*cookie*
+*cookies*
+*session*
+*login*
+auth-state*.json
+storage-state*.json
+playwright/.auth/
+browser-state/
+runway-cookies*.json
+runway-session*.json
+github-cookies*.json
 
 # OS/editor
 .DS_Store

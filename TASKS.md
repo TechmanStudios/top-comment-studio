@@ -21,6 +21,7 @@ Use this as the shared task board for humans and AI agents.
 | done | Create or update `.env.example` | Runway placeholders added; no real secrets |
 | done | Run `scripts/agent_repo_audit.py` | Generated local `AI_REPO_AUDIT.md`, ignored by git |
 | done | Create public GitHub repo | Created `https://github.com/TechmanStudios/top-comment-studio` as a public repository; local `origin` is configured |
+| done | Ignore local browser session exports | Cookie/session/auth-state patterns added to `.gitignore` |
 
 ## MVP
 
@@ -28,6 +29,7 @@ Use this as the shared task board for humans and AI agents.
 |---|---|---|
 | todo | Define MVP user flow | Keep demo-focused |
 | todo | Implement smallest end-to-end path | Avoid premature abstractions |
+| todo | Design Runway workflow chain | Use app Workflows for storyboard, video draft, and optional audio steps |
 | todo | Add smoke test or validation check | Prefer simple and fast |
 | todo | Add error states | Make demo resilient |
 
@@ -66,4 +68,12 @@ YYYY-MM-DD — Agent:
 - Validation: `gh repo view TechmanStudios/top-comment-studio` reports visibility `PUBLIC`.
 - Blockers: No repo-creation blocker remains.
 - Next step: Create the initial commit and push when Bryan is ready.
+```
+
+```text
+2026-05-09 — GitHub Copilot:
+- Summary: Added `.gitignore` coverage for local browser cookies/session exports and documented Runway Workflows plus Developer Portal model shortcuts.
+- Validation: `git check-ignore` confirms likely cookie/session/auth-state filenames are ignored.
+- Blockers: No local cookie file was found inside the repo during scan.
+- Next step: Design the first custom Runway Workflow chain for the comment-to-Short pipeline.
 ```

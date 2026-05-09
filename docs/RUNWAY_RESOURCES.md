@@ -19,6 +19,52 @@ This document keeps the Runway API and GitHub resources close at hand for Top Co
 - Auth header: `Authorization: Bearer <RUNWAYML_API_SECRET>`
 - Version header: `X-Runway-Version: 2024-11-06`
 
+## Runway Account Surfaces
+
+The project has access to two signed-in Runway surfaces during local development:
+
+- Runway app workflows: https://app.runwayml.com/video-tools/teams/techmandesign/ai-tools/workflows
+- Runway Developer Portal: https://dev.runwayml.com/
+
+Do not commit browser cookies, storage state, login exports, or session files. Local cookie/session exports are intentionally ignored by `.gitignore`.
+
+## Developer Portal Model Catalog
+
+The Developer Portal currently exposes these model/feature shortcuts for Top Comment Studio planning:
+
+- `runway/gwm-avatars` - real-time interactive avatars powered by GWM-1.
+- `runway/Gen-4.5` - text-to-video and image-to-video.
+- `runway/Gen-4 Turbo` - fast image-to-video.
+- `runway/Gen-4 Aleph` - video-to-video editing, transformation, and generation.
+- `runway/Gen-4 Image` - text/image-to-image generation.
+- `runway/Gen-4 Image Turbo` - faster, more cost-efficient text/image-to-image generation.
+- `runway/Gen-3 Turbo` - legacy image-to-video.
+- `runway/Act Two` - motion capture, image/video-to-video.
+- `google/Gemini 3 Pro` - image generation with 4K support.
+- `google/Gemini 2.5 Flash` - image generation and editing.
+- `openai/GPT Image 2` - image generation up to 4K.
+- `google/Veo 3` and `google/Veo 3.1` - text/image-to-video with sound.
+- `elevenlabs/Text to Speech` - speech generation.
+- `elevenlabs/Voice Isolation` - background noise removal.
+- `elevenlabs/Sound Effect` - text-to-audio effects.
+- `elevenlabs/Voice Dubbing` - audio translation/dubbing.
+- `elevenlabs/Speech to Speech` - voice conversion while preserving tone.
+
+## Runway App Workflows
+
+The Runway app has a node-based Workflows area for chaining models and intermediate steps. Useful featured templates to inspect or clone for the Top Comment Studio pipeline include:
+
+- Story Panels
+- B Roll Generator
+- Seamless Transitions
+- New Angles
+- Storyboard to Film
+- Video to Video - Scene Edit
+- Video to Video - Style Transfer
+- Fabric, Color, Texture Swap
+
+Initial workflow direction: create a custom workflow that takes a reviewed top-comment creative seed, generates storyboard panels or reference images, produces a vertical video draft, and optionally adds voiceover/sound effects after creator approval.
+
 ## High-Value Docs Pages
 
 - Create account / setup: https://docs.dev.runwayml.com/guides/setup/

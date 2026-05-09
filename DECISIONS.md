@@ -52,3 +52,15 @@ Alternatives considered: Leaving the key in `helpful.txt` for convenience.
 Tradeoffs: Contributors must copy or request the real secret locally, but the repo remains safe to publish.
 
 Follow-up: Rotate the key if it was ever committed or shared outside the local machine.
+
+### 2026-05-09 — Local Browser Session Exports
+
+Decision: Ignore local browser cookie, login, session, auth-state, and storage-state exports at the repo level.
+
+Why: Runway app and Developer Portal sessions may be useful for local workflow setup, but they must never be uploaded to the public repository.
+
+Alternatives considered: Relying only on local `.git/info/exclude`.
+
+Tradeoffs: Broad filename patterns may ignore future local files with session/cookie/auth naming, which is acceptable for safety.
+
+Follow-up: Keep durable, non-secret workflow notes in docs instead of exporting account state into tracked files.
