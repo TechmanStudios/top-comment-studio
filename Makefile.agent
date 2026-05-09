@@ -1,0 +1,7 @@
+# Optional helper commands for AI agents.
+# This file is intentionally separate from Makefile to avoid overriding project conventions.
+
+.PHONY: audit
+
+audit:
+	python scripts/agent_repo_audit.py

@@ -1,0 +1,11 @@
+Runway API secret moved to local `.env` as `RUNWAYML_API_SECRET`.
+
+Helpful URLs for the hackathon aiYoutube project:
+- https://github.com/runwayml/skills
+- https://docs.dev.runwayml.com/api-details/api_changelog/#third-party-models
+- https://github.com/runwayml
+- https://docs.dev.runwayml.com/guides/seedance/
+- https://runwayml.com/api-hackathon
+- https://docs.dev.runwayml.com/
+
+See `docs/RUNWAY_RESOURCES.md` for the organized Runway docs and GitHub inventory.

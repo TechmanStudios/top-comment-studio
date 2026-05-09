@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"github.copilot.chat.codesearch.enabled": true,
+		"terminal.integrated.env.windows": {
+			"PYTHONPATH": "C:\\ai"
+		}
+	}
+}

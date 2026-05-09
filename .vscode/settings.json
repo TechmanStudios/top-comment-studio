@@ -1,0 +1,11 @@
+{
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.formatOnSave": true,
+  "chat.agent.enabled": true,
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "text": "Read AGENTS.md and .github/copilot-instructions.md before making broad changes. Keep hackathon work small, runnable, and demo-focused."
+    }
+  ]
+}
