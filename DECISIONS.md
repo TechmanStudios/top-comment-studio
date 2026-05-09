@@ -64,3 +64,15 @@ Alternatives considered: Relying only on local `.git/info/exclude`.
 Tradeoffs: Broad filename patterns may ignore future local files with session/cookie/auth naming, which is acceptable for safety.
 
 Follow-up: Keep durable, non-secret workflow notes in docs instead of exporting account state into tracked files.
+
+### 2026-05-09 — Runway Workflow Endpoint Registry
+
+Decision: Track custom Runway Workflow endpoints through the Techman Studios Developer Portal workflow list.
+
+Why: Custom workflows created in the Runway app expose their API endpoints under the organization workflow endpoint page, which is the source of truth for integration work.
+
+Alternatives considered: Keeping endpoint URLs only in browser history or chat notes.
+
+Tradeoffs: The organization ID is now documented, but no secrets or session cookies are included.
+
+Follow-up: Document each created workflow's input schema, output schema, and endpoint name once available.

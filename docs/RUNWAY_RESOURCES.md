@@ -25,6 +25,7 @@ The project has access to two signed-in Runway surfaces during local development
 
 - Runway app workflows: https://app.runwayml.com/video-tools/teams/techmandesign/ai-tools/workflows
 - Runway Developer Portal: https://dev.runwayml.com/
+- Custom workflow API endpoints: https://dev.runwayml.com/organization/8f8366b8-b7b6-4f9c-baae-f72c16c9f79f/workflows
 
 Do not commit browser cookies, storage state, login exports, or session files. Local cookie/session exports are intentionally ignored by `.gitignore`.
 
@@ -64,6 +65,10 @@ The Runway app has a node-based Workflows area for chaining models and intermedi
 - Fabric, Color, Texture Swap
 
 Initial workflow direction: create a custom workflow that takes a reviewed top-comment creative seed, generates storyboard panels or reference images, produces a vertical video draft, and optionally adds voiceover/sound effects after creator approval.
+
+When a custom workflow is created in the Runway app, its API endpoint should appear in the Developer Portal workflow endpoint list for the Techman Studios organization:
+
+- https://dev.runwayml.com/organization/8f8366b8-b7b6-4f9c-baae-f72c16c9f79f/workflows
 
 ## High-Value Docs Pages
 

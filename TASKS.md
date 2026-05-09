@@ -77,3 +77,11 @@ YYYY-MM-DD — Agent:
 - Blockers: No local cookie file was found inside the repo during scan.
 - Next step: Design the first custom Runway Workflow chain for the comment-to-Short pipeline.
 ```
+
+```text
+2026-05-09 — GitHub Copilot:
+- Summary: Documented where custom Runway Workflow API endpoints land for the Techman Studios organization.
+- Validation: Confirmed the URL is recorded in `docs/RUNWAY_RESOURCES.md`.
+- Blockers: None.
+- Next step: After creating the first custom workflow, capture its endpoint name and expected inputs/outputs in the workflow design docs.
+```
