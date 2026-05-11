@@ -63,20 +63,12 @@ def health() -> dict[str, str | bool]:
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request) -> HTMLResponse:
-    latest = ChainStore(settings.data_dir).latest()
-    latest_rendered_video_urls = rendered_video_urls(latest) if latest else []
-    latest_render_progress = render_progress(latest)
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
             "request": request,
             "settings": settings,
-            "latest": latest,
-            "latest_rendered_video_urls": latest_rendered_video_urls,
-            "latest_render_progress_percent": format_progress_percent(latest_render_progress),
-            "latest_render_progress_width": format_progress_width(latest_render_progress),
-            "latest_render_status_label": render_status_label(latest),
         },
     )
 

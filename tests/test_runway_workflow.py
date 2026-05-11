@@ -169,7 +169,7 @@ def test_package_page_is_render_focused(monkeypatch, tmp_path):
     assert "Nine-image reference board" not in response.text
 
 
-def test_homepage_hides_idle_render_panel(monkeypatch, tmp_path):
+def test_homepage_never_shows_saved_render_panel(monkeypatch, tmp_path):
     monkeypatch.setattr(
         app_module,
         "settings",
@@ -182,13 +182,22 @@ def test_homepage_hides_idle_render_panel(monkeypatch, tmp_path):
     record = create_episode_record(
         CommentInput(selected_comment="Make the AI build a floating city powered by storms.")
     )
+    record.runway = RunwayWorkflowState(
+        invocation_id="invocation-123",
+        status="failed",
+        failure="Succeeded without exposed workflow outputs.",
+        output_urls=["https://example.com/stale.mp4"],
+    )
     ChainStore(tmp_path).save(record)
 
     response = TestClient(app_module.app).get("/")
 
     assert response.status_code == 200
     assert "Render output" not in response.text
-    assert "Open package" not in response.text
+    assert "Render blocked" not in response.text
+    assert "View rendered content" not in response.text
+    assert "Refresh render" not in response.text
+    assert "stale.mp4" not in response.text
 
 
 def test_homepage_has_ready_demo_signal_and_collapsed_controls(monkeypatch, tmp_path):

@@ -63,6 +63,14 @@ YYYY-MM-DD — Agent:
 
 ```text
 2026-05-11 — GitHub Copilot:
+- Summary: Removed the homepage Render Output panel entirely so stale or blocked render records no longer appear on the main intake page. The homepage now stays focused on the audience comment form, while package pages remain the only render progress/status surface after `Generate render`.
+- Validation: `uv run pytest` passed with 33 tests. Local homepage check confirmed `Signal intake` and the audience-comment CTA remain, while `Render output` and `Render blocked` are absent. `git diff --check` reported no whitespace errors, only the existing Windows CRLF warning for `TASKS.md`.
+- Blockers: None known.
+- Next step: Run tests, push, and redeploy Render so the live judge URL shows only the intake flow on the homepage.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
 - Summary: Locked the homepage Director Controls for the competition flow. The section remains visible, but its fields are read-only, and the public `/package` route now ignores submitted Director Control values so custom tone/world/motion/audio edits cannot perturb the paid-proven v66 workflow payload. Programmatic `CommentInput` customization remains available through internal/API paths.
 - Validation: `uv run pytest` passed with 33 tests. `git diff --check` reported no whitespace errors, only the existing Windows CRLF warning for `DECISIONS.md`.
 - Blockers: No blocker for the locked demo path. Editable controls should stay paused until custom prompt variants are paid-smoked and return exposed MP4 outputs.

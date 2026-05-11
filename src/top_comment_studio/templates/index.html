@@ -112,42 +112,6 @@
             </form>
         </section>
 
-        {% if latest and (latest_rendered_video_urls or latest.runway.invocation_id or latest.runway.failure) %}
-        {% set render_status = latest_render_status_label | default("Render ready" if latest_rendered_video_urls else
-        "Render blocked" if latest.runway.failure else "Rendering" if latest.runway.invocation_id else "Awaiting
-        render",
-        true) %}
-        {% set render_progress_width = latest_render_progress_width | default("100%" if latest_rendered_video_urls else
-        ((latest.runway.progress * 100) | round(1) ~ "%") if latest.runway.progress is not none else "5%" if
-        latest.runway.invocation_id else "0%", true) %}
-        {% set render_progress_percent = latest_render_progress_percent | default("100.0%" if latest_rendered_video_urls
-        else ((latest.runway.progress * 100) | round(1) ~ "%") if latest.runway.progress is not none else "5.0%" if
-        latest.runway.invocation_id else "0.0%", true) %}
-        <section class="panel render-panel lab-frame">
-            <div class="render-summary">
-                <div>
-                    <p class="eyebrow">Render output</p>
-                    <h2>{{ render_status }}</h2>
-                    <p class="meta-line">{{ latest.episode_id }} · v66 workflow</p>
-                </div>
-                <div class="render-actions">
-                    {% if latest_rendered_video_urls %}
-                    <a href="{{ latest_rendered_video_urls[0] }}" class="button-link output-button" target="_blank"
-                        rel="noreferrer">View rendered content</a>
-                    {% elif latest.runway.invocation_id %}
-                    <a href="/package/{{ latest.episode_id }}/runway-status" class="button-link secondary">Refresh
-                        render</a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="render-progress" aria-label="Render progress">
-                <div class="render-progress-track" aria-hidden="true">
-                    <div class="render-progress-fill" style="width: {{ render_progress_width }}"></div>
-                </div>
-                <span>{{ render_progress_percent }}</span>
-            </div>
-        </section>
-        {% endif %}
     </main>
 </body>
 
