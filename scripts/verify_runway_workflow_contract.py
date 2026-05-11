@@ -1084,7 +1084,9 @@ def validate_seamless_transition_keyframes(
     else:
         system_prompt = system_node.get("nodeOutputs", {}).get("prompt", {}).get("value", "")
         if "Story-panel continuity upgrade" not in system_prompt:
-            errors.append("Storyboard system prompt should include story-panel continuity guidance.")
+            errors.append(
+                "Storyboard system prompt should include story-panel continuity guidance."
+            )
         if "Seamless Transitions" not in system_prompt:
             errors.append("Storyboard system prompt should include seamless transition guidance.")
 
@@ -1108,9 +1110,7 @@ def validate_seamless_transition_keyframes(
             None,
             errors,
         )
-        lines.append(
-            f"seamless transition {index + 1}: {segment_name} lands on {next_frame_name}"
-        )
+        lines.append(f"seamless transition {index + 1}: {segment_name} lands on {next_frame_name}")
 
     final_segment_name = STORYBOARD_SEGMENT_NODES[-1]
     final_segment = nodes_by_name.get(final_segment_name)

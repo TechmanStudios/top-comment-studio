@@ -62,6 +62,70 @@ YYYY-MM-DD — Agent:
 ```
 
 ```text
+2026-05-11 — GitHub Copilot:
+- Summary: Added a live deployment path for the judge URL. GitHub Pages is documented as static-only, while the working app should deploy to a server-backed Python/Docker host with Runway secrets stored in host environment variables. Added a root `Dockerfile`, `.dockerignore`, `render.yaml`, and `docs/LIVE_DEPLOYMENT.md` with Render Blueprint and Techman Studios subdomain/DreamHost DNS guidance.
+- Validation: `uv run pytest` passed with 33 tests. `docker build -t top-comment-studio:deploy-check .` passed after Docker Desktop was started, and the container served `/health` on local port 8088.
+- Blockers: Need the deployment files committed/pushed to GitHub before Render can import the Blueprint. Render account setup may require Bryan's browser login and payment/workspace selection.
+- Next step: Commit/push the deployment files, open `https://render.com/deploy?repo=https://github.com/TechmanStudios/top-comment-studio`, enter the Runway secret when prompted, deploy, then point `top-comment.techmanstudios.com` or another subdomain at the Render service.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Simplified the Signal Intake demo path. The selected audience comment now has a real editable default value, so the form can render end-to-end without a browser required-field popup. The remaining optional prompt controls are still available, but collapsed under `Director controls` to keep the judge-facing path simple.
+- Validation: `uv run pytest` passed with 33 tests. Browser check confirmed the homepage has the editable default signal, closed `Director controls`, no visible duration field, and `Generate render`.
+- Blockers: None.
+- Next step: During the demo, leave the default signal for the fastest run or replace only that one field to show audience-driven variation.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Ran one paid live v66 generation through the local app after restarting the stale FastAPI server on port 8001. The successful run is `episode_010` with Runway invocation `a31a299d-ffdc-47f4-ae24-600856271589`.
+- Validation: The package page progressed from `Rendering` to `Render ready`; the saved record reports `status=SUCCEEDED`, one output URL, and no failure.
+- Blockers: None for this run.
+- Next step: Use the visible `Open video` action on the active package page to review the MP4 output.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Removed the user-editable duration field from Signal Intake and hard-coded the app's v66 workflow input to `duration_seconds=4`, matching the paid-proven four-second segment setting. Also hid the homepage render-output panel when the latest record has no active, blocked, or completed render, so the front page stays empty until `Generate render` actually starts a render state. Generate render now always attempts v66 submission and persists either an invocation or a visible blocked/error state.
+- Validation: `uv run pytest` passed with 32 tests. Browser check confirmed the homepage has no `Duration seconds`, no idle `Render output` panel, and still shows `Generate render`. Local preview check confirmed v66 payload duration is `4`.
+- Blockers: No paid live generation was run in this pass.
+- Next step: Run one live Generate render when ready and confirm the package page immediately shows `Rendering` plus auto-refresh, then `Open video` when complete.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Removed the double-approval UX from the judge flow. The intake form now has one visible `Generate render` action that posts creator approval as a hidden value and starts the configured v66 workflow in the same request. The package/render page no longer shows a creator-approval checkbox or `Start render`; it only shows status/progress, refresh while active, and video/open actions when complete.
+- Validation: `uv run pytest` passed with 31 tests, including route coverage proving `/package` starts the workflow without a second approval click and package-page coverage proving the old start controls are absent. Browser check confirmed the home page shows `Generate render`, no visible approval checkbox, and no `Generate package` copy.
+- Blockers: No paid live generation was run in this pass.
+- Next step: Rehearse with a live safe prompt once, then let the package page sit as the render monitor until the MP4 appears.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Replaced the dense package dashboard with a single judge-facing render page. The page now shows only render status, progress, start/refresh controls, and an embedded video player plus `Open video` action when output exists. Internal package details, workflow debug output, image board rows, and direct-generation panels are no longer rendered on the main package page.
+- Validation: `uv run pytest` passed with 30 tests, including a regression test that rejects the old dense package sections. Browser check at `/package/episode_003` confirmed the simplified render page is live and the old sections are absent. `git diff --check` reported only existing CRLF normalization warnings.
+- Blockers: No paid live generation was run in this pass.
+- Next step: Use the package page as the judge-facing output screen; keep internal diagnostics in code/routes only unless a separate admin/debug view is needed later.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Matched the Signal Intake and homepage render panels to the Techman Studios AI Labs card language with a dark shell, thin border, and warm-to-cyan top rail. Removed the old Latest Chain Checkpoint box and replaced it with a simple render output panel that shows v66 workflow status, progress, and either refresh or view-rendered-content action.
+- Validation: `uv run pytest` passed with 29 tests. FastAPI homepage render smoke returned 200 and confirmed the old latest-chain copy is gone. Browser check at `http://127.0.0.1:8001/` confirmed the updated frame treatment and render panel are served.
+- Blockers: None.
+- Next step: Reuse the render panel space for any judge-facing output controls, keeping the page centered on one clear package-to-render flow.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Wired the intake `Generate package` flow to optionally start the configured v66 Runway workflow when `Creator-approved for v66 Runway generation` is checked. Centralized rendered-video URL selection so the v66 workflow output takes priority over older board/direct fallback outputs, updated package-page auto-refresh to poll the correct status endpoint, and refreshed `.env.example` with the v66 endpoint/node map.
+- Validation: `uv run pytest` passed with 29 tests. `uv run python scripts/verify_runway_workflow_contract.py --strict-defaults --require-continuity-core --require-photo-enhancer-chains --require-seamless-transition-keyframes --require-1080p-video` passed against endpoint `c1b49d17-c80f-4705-b0e6-86c89a070464`. FastAPI TestClient render smoke returned 200 for `/` and `/package/episode_003`.
+- Blockers: No paid live generation was run in this pass.
+- Next step: In the browser, check the v66 approval box on a safe comment and generate one package during rehearsal to confirm the returned MP4 replaces the latest `Open rendered video` link.
+```
+
+```text
 2026-05-10 — GitHub Copilot:
 - Summary: Expanded `docs/RUNWAY_WORKFLOW_AGENT_HELP.md` and `docs/RUNWAY_WORKFLOW_BUILD_GUIDE.md` with a reusable programmatic Runway workflow engineering playbook. The new notes cover the canvas/editor API vs Developer API split, safe save/publish/verify order, graph mutation rules, stable TCS node naming, parser fanout and concat normalization, scalar Veo `startFrame`/`endFrame` routing, app node type mappings, 720p vs 1080p lessons, featured workflow harvesting, and the validation ladder from internal graph validation to paid smoke and local artifact inspection.
 - Validation: VS Code reported no Markdown problems for the edited docs. Direct trailing-whitespace scans found no matches in the Runway docs or `TASKS.md`. `git diff --check -- docs/RUNWAY_WORKFLOW_AGENT_HELP.md docs/RUNWAY_WORKFLOW_BUILD_GUIDE.md TASKS.md` passed for tracked changes with only the existing CRLF normalization warning for `TASKS.md`.

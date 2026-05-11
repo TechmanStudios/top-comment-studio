@@ -8,105 +8,142 @@
     <link rel="stylesheet" href="/static/app.css">
 </head>
 
-<body>
+<body class="app-page intake-page">
+    <header class="topbar" aria-label="Techman Studios application shell">
+        <a href="/" class="brand-lockup" aria-label="Top Comment Studio home">
+            <span class="brand-text">
+                <strong>Techman Studios</strong>
+                <small>Top Comment Studio</small>
+            </span>
+        </a>
+    </header>
+
     <main class="shell">
-        <section class="header">
-            <p class="eyebrow">Audience-in-the-loop studio</p>
-            <h1>Top Comment Studio</h1>
-            <p>Turn a selected audience comment into a safe Shorts package and Runway workflow handoff.</p>
+        <section class="header hero-panel">
+            <div class="hero-copy">
+                <p class="eyebrow">Audience in the loop</p>
+                <h1>Top Comment Studio</h1>
+                <p>Turn a selected audience comment into a safe Shorts package and Runway workflow handoff.</p>
+            </div>
+            <div class="hero-metrics" aria-label="Current production path">
+                <span>Comment</span>
+                <span>Guardrails</span>
+                <span>Runway</span>
+            </div>
         </section>
 
-        <section class="panel">
+        <section class="panel intake-panel lab-frame">
+            <div class="section-heading">
+                <p class="eyebrow">Signal intake</p>
+                <h2>Next Short Brief</h2>
+            </div>
             <form method="post" action="/package" class="grid-form">
-                <label>
-                    Previous video title
-                    <input name="previous_video_title" placeholder="The AI built a floating city">
-                </label>
-                <label>
-                    Previous video CTA
-                    <input name="previous_video_cta" placeholder="What should the AI add next?">
-                </label>
-                <label class="span-2">
-                    Previous video summary
-                    <textarea name="previous_video_summary" rows="3"
-                        placeholder="Briefly describe the previous episode"></textarea>
-                </label>
-                <label class="span-2">
+                <label class="span-2 primary-signal-field">
                     Selected audience comment
                     <textarea name="selected_comment" rows="4" required
-                        placeholder="Make the city powered by storms"></textarea>
+                        placeholder="Make the city powered by storms">Make the AI lab open a glowing observatory window and reveal a storm-powered city forming in the clouds.</textarea>
                 </label>
-                <label>
-                    Author
-                    <input name="author_display_name" placeholder="@viewer">
-                </label>
-                <label>
-                    Selection reason
-                    <input name="selection_reason" value="Top usable comment">
-                </label>
-                <label>
-                    Likes
-                    <input name="like_count" type="number" value="0" min="0">
-                </label>
-                <label>
-                    Replies
-                    <input name="reply_count" type="number" value="0" min="0">
-                </label>
-                <label>
-                    Tone
-                    <input name="target_tone" value="curious, cinematic, participatory">
-                </label>
-                <label>
-                    Duration seconds
-                    <input name="target_duration_seconds" type="number" value="35" min="15" max="60">
-                </label>
-                <label class="span-2">
-                    Visual style
-                    <input name="visual_style" value="vertical cinematic YouTube Short">
-                </label>
-                <label class="span-2">
-                    Subject continuity
-                    <input name="subject_focus" placeholder="What must stay recognizable from first frame to payoff?">
-                </label>
-                <label class="span-2">
-                    Scene world
-                    <input name="scene_world"
-                        placeholder="Where does the idea happen, and what makes the world readable?">
-                </label>
-                <label>
-                    Motion arc
-                    <textarea name="motion_direction" rows="3"
-                        placeholder="Hook action, transformation, payoff movement"></textarea>
-                </label>
-                <label>
-                    Camera language
-                    <textarea name="camera_direction" rows="3"
-                        placeholder="Push-in, orbit, reveal, tracking, pace"></textarea>
-                </label>
-                <label>
-                    Audio design
-                    <textarea name="audio_direction" rows="3"
-                        placeholder="Ambience, motion sounds, impact accents, final hit"></textarea>
-                </label>
-                <label>
-                    Quality constraints
-                    <textarea name="quality_constraints" rows="3"
-                        placeholder="Anything to avoid beyond the default safety rules"></textarea>
-                </label>
-                <label class="span-2">
-                    Bryan's creative notes
-                    <textarea name="creative_notes" rows="3"
-                        placeholder="Optional direction for the next episode"></textarea>
-                </label>
-                <button type="submit">Generate package</button>
+                <details class="span-2 director-controls">
+                    <summary>Director controls</summary>
+                    <p class="director-note">Only the audience comment is required. These optional fields steer tone,
+                        world, motion, camera, audio, and constraints; blank fields use safe demo defaults.</p>
+                    <div class="grid-form director-grid">
+                        <label>
+                            Previous video title
+                            <input name="previous_video_title" placeholder="The AI built a floating city">
+                        </label>
+                        <label>
+                            Previous video CTA
+                            <input name="previous_video_cta" placeholder="What should the AI add next?">
+                        </label>
+                        <label class="span-2">
+                            Previous video summary
+                            <textarea name="previous_video_summary" rows="3"
+                                placeholder="Briefly describe the previous episode"></textarea>
+                        </label>
+                        <label>
+                            Tone
+                            <input name="target_tone" value="curious, cinematic, participatory">
+                        </label>
+                        <label>
+                            Visual style
+                            <input name="visual_style" value="vertical cinematic YouTube Short">
+                        </label>
+                        <label class="span-2">
+                            Subject continuity
+                            <input name="subject_focus"
+                                placeholder="What must stay recognizable from first frame to payoff?">
+                        </label>
+                        <label class="span-2">
+                            Scene world
+                            <input name="scene_world"
+                                placeholder="Where does the idea happen, and what makes the world readable?">
+                        </label>
+                        <label>
+                            Motion arc
+                            <textarea name="motion_direction" rows="3"
+                                placeholder="Hook action, transformation, payoff movement"></textarea>
+                        </label>
+                        <label>
+                            Camera language
+                            <textarea name="camera_direction" rows="3"
+                                placeholder="Push-in, orbit, reveal, tracking, pace"></textarea>
+                        </label>
+                        <label>
+                            Audio design
+                            <textarea name="audio_direction" rows="3"
+                                placeholder="Ambience, motion sounds, impact accents, final hit"></textarea>
+                        </label>
+                        <label>
+                            Quality constraints
+                            <textarea name="quality_constraints" rows="3"
+                                placeholder="Anything to avoid beyond the default safety rules"></textarea>
+                        </label>
+                        <label class="span-2">
+                            Bryan's creative notes
+                            <textarea name="creative_notes" rows="3"
+                                placeholder="Optional direction for the next episode"></textarea>
+                        </label>
+                    </div>
+                </details>
+                <button type="submit">Generate render</button>
             </form>
         </section>
 
-        {% if latest %}
-        <section class="panel compact">
-            <h2>Latest local draft</h2>
-            <p><strong>{{ latest.episode_id }}</strong> · {{ latest.title }}</p>
-            <p>{{ latest.guardrail.status }} · {{ latest.package.next_cta }}</p>
+        {% if latest and (latest_rendered_video_urls or latest.runway.invocation_id or latest.runway.failure) %}
+        {% set render_status = latest_render_status_label | default("Render ready" if latest_rendered_video_urls else
+        "Render blocked" if latest.runway.failure else "Rendering" if latest.runway.invocation_id else "Awaiting
+        render",
+        true) %}
+        {% set render_progress_width = latest_render_progress_width | default("100%" if latest_rendered_video_urls else
+        ((latest.runway.progress * 100) | round(1) ~ "%") if latest.runway.progress is not none else "5%" if
+        latest.runway.invocation_id else "0%", true) %}
+        {% set render_progress_percent = latest_render_progress_percent | default("100.0%" if latest_rendered_video_urls
+        else ((latest.runway.progress * 100) | round(1) ~ "%") if latest.runway.progress is not none else "5.0%" if
+        latest.runway.invocation_id else "0.0%", true) %}
+        <section class="panel render-panel lab-frame">
+            <div class="render-summary">
+                <div>
+                    <p class="eyebrow">Render output</p>
+                    <h2>{{ render_status }}</h2>
+                    <p class="meta-line">{{ latest.episode_id }} · v66 workflow</p>
+                </div>
+                <div class="render-actions">
+                    {% if latest_rendered_video_urls %}
+                    <a href="{{ latest_rendered_video_urls[0] }}" class="button-link output-button" target="_blank"
+                        rel="noreferrer">View rendered content</a>
+                    {% elif latest.runway.invocation_id %}
+                    <a href="/package/{{ latest.episode_id }}/runway-status" class="button-link secondary">Refresh
+                        render</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="render-progress" aria-label="Render progress">
+                <div class="render-progress-track" aria-hidden="true">
+                    <div class="render-progress-fill" style="width: {{ render_progress_width }}"></div>
+                </div>
+                <span>{{ render_progress_percent }}</span>
+            </div>
         </section>
         {% endif %}
     </main>

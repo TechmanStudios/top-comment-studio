@@ -31,6 +31,12 @@ Then open http://127.0.0.1:8000.
 uv run pytest
 ```
 
+## Live Deployment
+
+GitHub Pages can host a static project page, but it cannot run this FastAPI app or keep the Runway API secret server-side. For the live judging URL, deploy the app to a server-backed Python or Docker host, then point a Techman Studios subdomain at that host.
+
+The repo includes a root [render.yaml](render.yaml) Blueprint for Render. See [docs/LIVE_DEPLOYMENT.md](docs/LIVE_DEPLOYMENT.md) for the recommended Render setup, required environment variables, DNS notes, and secret-handling checklist.
+
 ## Runway Workflow Submit
 
 The app now includes a dry-run preview and explicit creator-approved submit path for the first published Runway workflow. Until the workflow is created and published in Runway, the package page will show configuration blockers instead of calling the API.
@@ -41,7 +47,9 @@ For the one-image cinematic proof, the package page includes a separate creator-
 
 For the final video, generate and refresh all three Nano Banana board rows first. The final-video button submits Veo 3.1 image-to-video with the board's first hero image as the single public-API prompt image, while the prompt carries the unified AV director packet and the nine-image board plan. Veo 3.1 is the final adapter because the demo output needs native sound.
 
-Required local values after publishing a `TCS Gen/Veo Director v2` workflow or compatible board-row workflows:
+The checked-in example configuration points to the current paid-proven v66 workflow endpoint, `c1b49d17-c80f-4705-b0e6-86c89a070464`, with its ten TCS input node mappings. Add your local Runway secret before submitting paid generations.
+
+Required local values after publishing a replacement `TCS Gen/Veo Director v2` workflow or compatible board-row workflows:
 
 ```powershell
 RUNWAYML_HACKATHON_API_SECRET=your_real_hackathon_secret
@@ -49,7 +57,11 @@ RUNWAY_WORKFLOW_ID=published_workflow_uuid
 RUNWAY_WORKFLOW_NODE_MAP_JSON={"av_director_packet":{"node_id":"node-uuid","output_key":"prompt"}}
 ```
 
-The node map must include every logical input listed in [docs/RUNWAY_RESOURCES.md](docs/RUNWAY_RESOURCES.md). The submit button still requires an explicit creator approval checkbox before any paid Runway generation request is sent.
+The node map must include every logical input listed in [docs/RUNWAY_RESOURCES.md](docs/RUNWAY_RESOURCES.md). The intake page's `Generate render` action is the explicit creator-approved paid-generation action.
+
+On the intake page, `Generate render` creates the package and submits the configured workflow in one step. The package page then auto-refreshes the workflow status until Runway returns the MP4, and `Open video` points at that newest workflow output.
+
+The UI does not expose a duration field. The app sends the v66-proven `duration_seconds=4` workflow input, which corresponds to the four 4-second Veo segments stitched into the final short.
 
 ## Environment Variables
 
@@ -76,15 +88,7 @@ The node map must include every logical input listed in [docs/RUNWAY_RESOURCES.m
 
 Start with these files:
 
-- [START_HERE_FOR_AI.md](START_HERE_FOR_AI.md)
-- [PROJECT_BRIEF.md](PROJECT_BRIEF.md)
-- [MVP_SPEC.md](MVP_SPEC.md)
-- [GUARDRAILS.md](GUARDRAILS.md)
-- [COMMENT_SELECTION_POLICY.md](COMMENT_SELECTION_POLICY.md)
-- [docs/RUNWAY_RESOURCES.md](docs/RUNWAY_RESOURCES.md)
-- [docs/RUNWAY_WORKFLOW_BUILD_GUIDE.md](docs/RUNWAY_WORKFLOW_BUILD_GUIDE.md)
-- [docs/PROJECT_INVENTORY.md](docs/PROJECT_INVENTORY.md)
-- [docs/NEXT_PHASE_BUILD_PLAN.md](docs/NEXT_PHASE_BUILD_PLAN.md)
+- [docs/LIVE_DEPLOYMENT.md](docs/LIVE_DEPLOYMENT.md)
 
 ## Validation
 

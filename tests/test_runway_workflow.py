@@ -2,6 +2,7 @@ import json
 
 import httpx
 import top_comment_studio.app as app_module
+from fastapi.testclient import TestClient
 
 from top_comment_studio.app import (
     advance_direct_generation,
@@ -15,7 +16,9 @@ from top_comment_studio.app import (
     extract_progress,
     image_board_submission_blockers,
     image_board_video_submission_blockers,
+    rendered_video_urls,
     summarize_asset_counts,
+    submit_record_to_runway,
 )
 from top_comment_studio.runway.client import RunwayClient
 from top_comment_studio.runway.workflows import (
@@ -29,8 +32,10 @@ from top_comment_studio.schemas import (
     RunwayDirectGenerationState,
     RunwayImageBoardRowState,
     RunwayImageBoardState,
+    RunwayWorkflowState,
 )
 from top_comment_studio.settings import Settings
+from top_comment_studio.storage import ChainStore
 
 
 def test_builds_runway_workflow_preview_with_node_outputs():
@@ -51,13 +56,13 @@ def test_builds_runway_workflow_preview_with_node_outputs():
     preview = build_workflow_preview(record, settings)
 
     assert preview.can_submit is True
-    assert preview.duration_seconds == 10
+    assert preview.duration_seconds == 4
     assert preview.aspect_ratio == "1080:1920"
     assert preview.node_outputs["node-episode_id"]["prompt"]["value"] == record.episode_id
     assert "floating city" in preview.node_outputs["node-audience_signal"]["prompt"]["value"]
     assert "audio_design" in preview.node_outputs["node-av_director_packet"]["prompt"]["value"]
     assert "transformation accent" in preview.node_outputs["node-audio_prompt"]["prompt"]["value"]
-    assert preview.node_outputs["node-duration_seconds"]["prompt"]["value"] == "10"
+    assert preview.node_outputs["node-duration_seconds"]["prompt"]["value"] == "4"
 
 
 def test_runway_video_duration_is_clamped_to_supported_range():
@@ -85,6 +90,162 @@ def test_submission_blockers_require_approval_secret_and_config():
     assert "Creator approval is required before submitting to Runway." in blockers
     assert "Set RUNWAYML_HACKATHON_API_SECRET before submitting to Runway." in blockers
     assert any("RUNWAY_WORKFLOW_ID" in blocker for blocker in blockers)
+
+
+def test_submit_record_to_runway_starts_configured_workflow(monkeypatch):
+    monkeypatch.setenv("RUNWAYML_HACKATHON_API_SECRET", "test-secret")
+    monkeypatch.setattr(
+        app_module,
+        "settings",
+        Settings(
+            runway_workflow_id="workflow-123",
+            runway_workflow_node_map_json=_node_map_json(),
+        ),
+    )
+    record = create_episode_record(
+        CommentInput(selected_comment="Make the AI build a floating city powered by storms.")
+    )
+    client = FakeWorkflowRunwayClient()
+
+    updated, message, error = submit_record_to_runway(
+        record,
+        creator_approved=True,
+        client=client,
+    )
+
+    assert error == ""
+    assert message == "Submitted to Runway invocation invocation-123."
+    assert updated.runway.workflow_id == "workflow-123"
+    assert updated.runway.invocation_id == "invocation-123"
+    assert updated.runway.status == "submitted"
+    assert client.workflow_requests[0]["workflow_id"] == "workflow-123"
+    assert set(client.workflow_requests[0]["node_outputs"]) == {
+        f"node-{name}" for name in REQUIRED_WORKFLOW_INPUTS
+    }
+
+
+def test_rendered_video_urls_prefers_workflow_output():
+    record = create_episode_record(
+        CommentInput(selected_comment="Make the AI build a floating city powered by storms.")
+    )
+    record.runway_direct = RunwayDirectGenerationState(
+        output_urls=["https://example.com/direct.mp4"]
+    )
+    record.runway_image_board = RunwayImageBoardState(
+        video_output_urls=["https://example.com/board.mp4"]
+    )
+    record.runway = RunwayWorkflowState(output_urls=["https://example.com/v66.mp4"])
+
+    assert rendered_video_urls(record) == ["https://example.com/v66.mp4"]
+
+    record.runway = RunwayWorkflowState()
+
+    assert rendered_video_urls(record) == ["https://example.com/board.mp4"]
+
+
+def test_package_page_is_render_focused(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        app_module,
+        "settings",
+        Settings(
+            data_dir=tmp_path,
+            runway_workflow_id="workflow-123",
+            runway_workflow_node_map_json=_node_map_json(),
+        ),
+    )
+    record = create_episode_record(
+        CommentInput(selected_comment="Make the AI build a floating city powered by storms.")
+    )
+    ChainStore(tmp_path).save(record)
+
+    response = TestClient(app_module.app).get(f"/package/{record.episode_id}")
+
+    assert response.status_code == 200
+    assert "Render output" in response.text
+    assert "Start render" not in response.text
+    assert "Creator-approved for v66 Runway generation" not in response.text
+    assert "Shorts package" not in response.text
+    assert "Runway workflow handoff" not in response.text
+    assert "Nine-image reference board" not in response.text
+
+
+def test_homepage_hides_idle_render_panel(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        app_module,
+        "settings",
+        Settings(
+            data_dir=tmp_path,
+            runway_workflow_id="workflow-123",
+            runway_workflow_node_map_json=_node_map_json(),
+        ),
+    )
+    record = create_episode_record(
+        CommentInput(selected_comment="Make the AI build a floating city powered by storms.")
+    )
+    ChainStore(tmp_path).save(record)
+
+    response = TestClient(app_module.app).get("/")
+
+    assert response.status_code == 200
+    assert "Render output" not in response.text
+    assert "Open package" not in response.text
+
+
+def test_homepage_has_ready_demo_signal_and_collapsed_controls(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        app_module,
+        "settings",
+        Settings(
+            data_dir=tmp_path,
+            runway_workflow_id="workflow-123",
+            runway_workflow_node_map_json=_node_map_json(),
+        ),
+    )
+
+    response = TestClient(app_module.app).get("/")
+
+    assert response.status_code == 200
+    assert "storm-powered city forming in the clouds" in response.text
+    assert "Director controls" in response.text
+    assert "blank fields use safe demo defaults" in response.text
+    assert "Duration seconds" not in response.text
+
+
+def test_create_package_route_starts_render_without_second_approval(monkeypatch, tmp_path):
+    monkeypatch.setenv("RUNWAYML_HACKATHON_API_SECRET", "test-secret")
+    monkeypatch.setattr(
+        app_module,
+        "settings",
+        Settings(
+            data_dir=tmp_path,
+            runway_workflow_id="workflow-123",
+            runway_workflow_node_map_json=_node_map_json(),
+        ),
+    )
+
+    class RouteWorkflowClient(FakeWorkflowRunwayClient):
+        instances: list["RouteWorkflowClient"] = []
+
+        def __init__(self, settings: Settings) -> None:
+            super().__init__()
+            self.settings = settings
+            self.instances.append(self)
+
+    monkeypatch.setattr(app_module, "RunwayClient", RouteWorkflowClient)
+
+    response = TestClient(app_module.app).post(
+        "/package",
+        data={"selected_comment": "Make the video a city powered by storms."},
+    )
+    record = ChainStore(tmp_path).latest()
+
+    assert response.status_code == 200
+    assert record is not None
+    assert record.runway.invocation_id == "invocation-123"
+    assert "Rendering" in response.text
+    assert "Start render" not in response.text
+    assert "Creator-approved for v66 Runway generation" not in response.text
+    assert RouteWorkflowClient.instances[0].workflow_requests[0]["workflow_id"] == "workflow-123"
 
 
 def test_direct_generation_blockers_require_approval_secret_and_safe_comment():
@@ -598,6 +759,24 @@ def test_runway_client_runs_workflow_with_mocked_http(monkeypatch):
 
 def _node_map_json() -> str:
     return json.dumps({name: {"node_id": f"node-{name}"} for name in REQUIRED_WORKFLOW_INPUTS})
+
+
+class FakeWorkflowRunwayClient:
+    def __init__(self) -> None:
+        self.workflow_requests = []
+
+    def run_workflow(
+        self,
+        workflow_id: str,
+        node_outputs: dict[str, dict[str, dict[str, object]]],
+    ) -> dict[str, str]:
+        self.workflow_requests.append(
+            {
+                "workflow_id": workflow_id,
+                "node_outputs": node_outputs,
+            }
+        )
+        return {"workflowInvocationId": "invocation-123"}
 
 
 class FakeDirectRunwayClient:

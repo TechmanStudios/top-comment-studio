@@ -61,13 +61,20 @@ def health() -> dict[str, str | bool]:
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request) -> HTMLResponse:
+    latest = ChainStore(settings.data_dir).latest()
+    latest_rendered_video_urls = rendered_video_urls(latest) if latest else []
+    latest_render_progress = render_progress(latest)
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
             "request": request,
             "settings": settings,
-            "latest": ChainStore(settings.data_dir).latest(),
+            "latest": latest,
+            "latest_rendered_video_urls": latest_rendered_video_urls,
+            "latest_render_progress_percent": format_progress_percent(latest_render_progress),
+            "latest_render_progress_width": format_progress_width(latest_render_progress),
+            "latest_render_status_label": render_status_label(latest),
         },
     )
 
@@ -114,9 +121,20 @@ def create_package_view(
         audio_direction=audio_direction,
         quality_constraints=quality_constraints,
     )
+    store = ChainStore(settings.data_dir)
     record = create_episode_record(comment_input)
-    saved_path = ChainStore(settings.data_dir).save(record)
-    return render_package_response(request, record, saved_path)
+    record, runway_message, runway_error = submit_record_to_runway(
+        record,
+        creator_approved=True,
+    )
+    saved_path = store.save(record)
+    return render_package_response(
+        request,
+        record,
+        saved_path,
+        runway_message=runway_message,
+        runway_error=runway_error,
+    )
 
 
 @app.get("/package/{episode_id}", response_class=HTMLResponse)
@@ -134,6 +152,26 @@ def submit_runway_workflow(
 ) -> HTMLResponse:
     store = ChainStore(settings.data_dir)
     record = get_episode_or_404(store, episode_id)
+    record, runway_message, runway_error = submit_record_to_runway(
+        record,
+        creator_approved=creator_approved,
+    )
+    saved_path = store.save(record)
+    return render_package_response(
+        request,
+        record,
+        saved_path,
+        runway_message=runway_message,
+        runway_error=runway_error,
+    )
+
+
+def submit_record_to_runway(
+    record: EpisodeRecord,
+    *,
+    creator_approved: bool,
+    client: RunwayClient | None = None,
+) -> tuple[EpisodeRecord, str, str]:
     preview = build_workflow_preview(record, settings)
     blockers = workflow_submission_blockers(
         record,
@@ -142,16 +180,20 @@ def submit_runway_workflow(
         creator_approved=creator_approved,
     )
     if blockers:
-        return render_package_response(
-            request,
-            record,
-            store.path_for(episode_id),
-            runway_error=" ".join(blockers),
+        failure = " ".join(blockers)
+        record.runway = RunwayWorkflowState(
+            workflow_id=preview.workflow_id,
+            workflow_name=preview.workflow_name,
+            status="failed",
+            failure=failure,
+            updated_at=current_timestamp(),
         )
+        return record, "", failure
 
     now = current_timestamp()
     try:
-        response = RunwayClient(settings).run_workflow(preview.workflow_id, preview.node_outputs)
+        runway_client = client or RunwayClient(settings)
+        response = runway_client.run_workflow(preview.workflow_id, preview.node_outputs)
     except RunwayClientError as exc:
         record.runway = RunwayWorkflowState(
             workflow_id=preview.workflow_id,
@@ -161,10 +203,9 @@ def submit_runway_workflow(
             updated_at=now,
             last_response={"status_code": exc.status_code, "response_body": exc.response_body},
         )
-        saved_path = store.save(record)
-        return render_package_response(request, record, saved_path, runway_error=str(exc))
+        return record, "", str(exc)
 
-    invocation_id = str(response.get("id", ""))
+    invocation_id = str(response.get("id") or response.get("workflowInvocationId") or "")
     status = "submitted" if invocation_id else "failed"
     failure = "" if invocation_id else "Runway did not return a workflow invocation ID."
     record.runway = RunwayWorkflowState(
@@ -177,9 +218,8 @@ def submit_runway_workflow(
         updated_at=now,
         last_response=response,
     )
-    saved_path = store.save(record)
     message = f"Submitted to Runway invocation {invocation_id}." if invocation_id else failure
-    return render_package_response(request, record, saved_path, runway_message=message)
+    return record, message if invocation_id else "", failure
 
 
 @app.get("/package/{episode_id}/runway-status", response_class=HTMLResponse)
@@ -610,6 +650,10 @@ def render_package_response(
             "record": record,
             "saved_path": saved_path,
             "settings": settings,
+            "rendered_video_urls": rendered_video_urls(record),
+            "render_status_label": render_status_label(record),
+            "render_progress_percent": format_progress_percent(render_progress(record)),
+            "render_progress_width": format_progress_width(render_progress(record)),
             "runway_preview": build_workflow_preview(record, settings),
             "direct_can_submit": direct_generation_can_submit(record),
             "runway_progress_percent": format_progress_percent(record.runway.progress),
@@ -638,6 +682,42 @@ def render_package_response(
             "image_board_error": image_board_error,
         },
     )
+
+
+def rendered_video_urls(record: EpisodeRecord) -> list[str]:
+    return (
+        record.runway.output_urls
+        or record.runway_image_board.video_output_urls
+        or record.runway_direct.output_urls
+    )
+
+
+def render_progress(record: EpisodeRecord | None) -> float | None:
+    if record is None:
+        return None
+    if rendered_video_urls(record):
+        return 1.0
+    if record.runway.progress is not None:
+        return record.runway.progress
+    if record.runway.invocation_id:
+        return 0.05
+    if record.runway_image_board.video_progress is not None:
+        return record.runway_image_board.video_progress
+    if record.runway_direct.progress is not None:
+        return record.runway_direct.progress
+    return 0.0
+
+
+def render_status_label(record: EpisodeRecord | None) -> str:
+    if record is None:
+        return "No render queued"
+    if rendered_video_urls(record):
+        return "Render ready"
+    if record.runway.failure:
+        return "Render blocked"
+    if record.runway.invocation_id:
+        return "Rendering"
+    return "Awaiting render"
 
 
 def direct_generation_can_submit(record: EpisodeRecord) -> bool:

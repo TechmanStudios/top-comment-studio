@@ -1,0 +1,40 @@
+# Render Blueprint for the live judging app.
+# Real secrets are entered in the Render Dashboard during Blueprint setup.
+services:
+  - type: web
+    name: top-comment-studio
+    runtime: docker
+    repo: https://github.com/TechmanStudios/top-comment-studio.git
+    branch: main
+    plan: starter
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    disk:
+      name: top-comment-studio-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: APP_NAME
+        value: Top Comment Studio
+      - key: RUNWAYML_HACKATHON_API_SECRET
+        sync: false
+      - key: RUNWAYML_API_BASE_URL
+        value: https://api.dev.runwayml.com
+      - key: RUNWAYML_API_VERSION
+        value: 2024-11-06
+      - key: RUNWAY_WORKFLOW_ID
+        value: c1b49d17-c80f-4705-b0e6-86c89a070464
+      - key: RUNWAY_WORKFLOW_NAME
+        value: TCS Gen/Veo Director v2
+      - key: RUNWAY_WORKFLOW_NODE_MAP_JSON
+        value: >-
+          {"aspect_ratio":{"node_id":"dc80a5e8-e070-4f67-b10a-1aa01d5b9c49","output_key":"prompt"},"audience_signal":{"node_id":"7bed46ac-6a10-4548-a143-ba70344da34a","output_key":"prompt"},"audio_prompt":{"node_id":"3baca275-43ea-41ba-9a11-436a84703726","output_key":"prompt"},"av_director_packet":{"node_id":"0b1f734a-7f00-4aa6-b293-fd3b9aab8b60","output_key":"prompt"},"duration_seconds":{"node_id":"4be0df1e-afa3-4279-88cf-64b2169d36c8","output_key":"prompt"},"episode_id":{"node_id":"276f13b6-0064-4a9d-8704-9aee26be2ba2","output_key":"prompt"},"motion_prompt":{"node_id":"03124ca1-4bf8-41a4-8c3a-a7bc70363d01","output_key":"prompt"},"opening_frame_prompt":{"node_id":"d1bab381-4db1-48f0-ad38-9e7776d8d30c","output_key":"prompt"},"safety_status":{"node_id":"8ceb8fe4-dfaa-473a-adf9-c2b99c21653e","output_key":"prompt"},"sync_prompt":{"node_id":"a9620f88-47a1-4033-9b1f-79b192ad377b","output_key":"prompt"}}
+      - key: TOP_COMMENT_STUDIO_DATA_DIR
+        value: /data/local

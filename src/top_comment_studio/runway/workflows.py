@@ -9,6 +9,7 @@ from ..settings import Settings
 
 WORKFLOW_NAME = "TCS Gen/Veo Director v2"
 WORKFLOW_ASPECT_RATIO = "1080:1920"
+WORKFLOW_V66_SEGMENT_DURATION_SECONDS = 4
 RUNWAY_VIDEO_MIN_DURATION_SECONDS = 2
 RUNWAY_VIDEO_MAX_DURATION_SECONDS = 10
 REQUIRED_WORKFLOW_INPUTS = [
@@ -74,7 +75,6 @@ def build_workflow_preview(record: EpisodeRecord, settings: Settings) -> RunwayW
 
 
 def build_logical_inputs(record: EpisodeRecord) -> dict[str, str]:
-    context = record.production_context
     packet = record.package.av_director_packet
     return {
         "episode_id": record.episode_id,
@@ -84,7 +84,7 @@ def build_logical_inputs(record: EpisodeRecord) -> dict[str, str]:
         "motion_prompt": " ".join([packet.motion_arc, packet.camera_language]).strip(),
         "audio_prompt": packet.audio_design,
         "sync_prompt": packet.audio_visual_sync,
-        "duration_seconds": str(clamp_runway_video_duration(context.target_duration_seconds)),
+        "duration_seconds": str(WORKFLOW_V66_SEGMENT_DURATION_SECONDS),
         "aspect_ratio": WORKFLOW_ASPECT_RATIO,
         "safety_status": record.guardrail.status,
     }

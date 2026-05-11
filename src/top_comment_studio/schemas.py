@@ -68,7 +68,7 @@ class RunwayWorkflowPreview(BaseModel):
     workflow_id: str = ""
     workflow_name: str = "TCS Gen/Veo Director v2"
     endpoint_path: str = ""
-    duration_seconds: int = 12
+    duration_seconds: int = 4
     aspect_ratio: str = "1080:1920"
     logical_inputs: dict[str, str | int | bool] = Field(default_factory=dict)
     node_outputs: dict[str, dict[str, dict[str, Any]]] = Field(default_factory=dict)

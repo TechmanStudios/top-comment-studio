@@ -17,6 +17,42 @@ Follow-up:
 
 ## Decisions
 
+### 2026-05-11 — Live Demo Requires Server-Backed Hosting
+
+Decision: Use a server-backed Python or Docker host for the live judging URL, optionally behind a Techman Studios subdomain, instead of trying to run the app from GitHub Pages.
+
+Why: GitHub Pages only serves static files and cannot run FastAPI or protect the Runway API secret. The app's one-click render flow must keep Runway credentials on the server while exposing a public URL to judges.
+
+Alternatives considered: GitHub Pages static hosting, DreamHost shared hosting, a DreamHost VPS, or a managed app host such as Render, Railway, Fly.io, or DigitalOcean App Platform.
+
+Tradeoffs: A server-backed host adds deployment setup and runtime cost, but it preserves the current working app behavior and keeps secrets out of the public repo. GitHub Pages can still be used later for a static project/README site, but not for paid generation.
+
+Follow-up: Deploy with the root `Dockerfile` or the documented `uvicorn` start command, set secrets in the host dashboard, attach persistent storage if available, and point `top-comment.techmanstudios.com` or another subdomain at the host.
+
+### 2026-05-11 — Package Generation Can Start v66 Workflow
+
+Decision: Let the intake form submit the current v66 Runway workflow during `Generate package` when the creator-approved checkbox is checked, while keeping the existing package-page submit route as a manual fallback.
+
+Why: Bryan wants the app flow to continue from comment package generation into rendered video generation without making a second page feel like the real starting point. The workflow still spends Runway credits, so the creator approval gate remains explicit.
+
+Alternatives considered: Auto-submit on every package generation without approval, or leave workflow submission only on the package page.
+
+Tradeoffs: One checkbox keeps the paid-generation boundary visible, but the happy path is now a single generate action. The package page auto-refreshes the status endpoint until the workflow returns an MP4.
+
+Follow-up: During demo rehearsal, use a safe prompt and confirm the `Open rendered video` action updates from the v66 workflow output after Runway returns `final_storyboard_short_16s`.
+
+### 2026-05-11 — Techman-Themed App Shell
+
+Decision: Keep the MVP as a server-rendered FastAPI/Jinja app and restyle the existing templates around the Techman Studios public-site theme: dark cinematic canvas, ivory block typography, gold primary actions, blue-green grid/circuit atmosphere, and compact uppercase navigation.
+
+Why: The workflow engineering is at a demo checkpoint, and the next useful move is improving the app experience without adding a frontend build system or changing the proven Runway contract.
+
+Alternatives considered: Build a React/Next.js frontend, copy website assets directly, or leave the plain scaffold until more app features exist.
+
+Tradeoffs: A CSS/Jinja pass is less flexible than a component frontend, but it is faster, reviewable, and keeps the hackathon app easy to run. The design echoes the website without depending on external brand images.
+
+Follow-up: After the core demo flow is stable, consider extracting a shared base template and adding lightweight client-side enhancements for package review and Runway status refresh.
+
 ### 2026-05-10 — 1080p Seamless-Keyframe Demo Checkpoint
 
 Decision: Publish a version 66 checkpoint that keeps the seamless-keyframe Continuity Core design, sets all Veo 3.1 segments to `1080p`, and spaces the generated-frame/enhancer/video rows for clearer Runway editor inspection.
