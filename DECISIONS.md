@@ -17,6 +17,18 @@ Follow-up:
 
 ## Decisions
 
+### 2026-05-11 — Use Render Subdomain For Judging
+
+Decision: Use `https://top-comment-studio.onrender.com/` as the active judge URL for now, leaving `top-comment.techmanstudios.com` as a deferred polish item.
+
+Why: The Render subdomain is already live, HTTPS-enabled, and validates the real server-side Runway flow without waiting on DreamHost DNS propagation.
+
+Alternatives considered: Finish the Techman Studios custom subdomain before submitting the judging link.
+
+Tradeoffs: The onrender.com URL is less branded, but it reduces setup risk and keeps the demo path simple. The custom domain can still point at the same service later.
+
+Follow-up: If brand polish becomes important after judging, add the DreamHost `CNAME` host `top-comment` to target `top-comment-studio.onrender.com`, then verify the domain in Render.
+
 ### 2026-05-11 — Live Demo Requires Server-Backed Hosting
 
 Decision: Use a server-backed Python or Docker host for the live judging URL, optionally behind a Techman Studios subdomain, instead of trying to run the app from GitHub Pages.

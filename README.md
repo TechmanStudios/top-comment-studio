@@ -35,6 +35,12 @@ uv run pytest
 
 GitHub Pages can host a static project page, but it cannot run this FastAPI app or keep the Runway API secret server-side. For the live judging URL, deploy the app to a server-backed Python or Docker host, then point a Techman Studios subdomain at that host.
 
+Current live judge URL:
+
+```text
+https://top-comment-studio.onrender.com/
+```
+
 The repo includes a root [render.yaml](render.yaml) Blueprint for Render. See [docs/LIVE_DEPLOYMENT.md](docs/LIVE_DEPLOYMENT.md) for the recommended Render setup, required environment variables, DNS notes, and secret-handling checklist.
 
 ## Runway Workflow Submit

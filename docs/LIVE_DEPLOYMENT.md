@@ -12,6 +12,16 @@ Use three pieces:
 
 The live URL should point to the server-backed app, not to GitHub Pages.
 
+## Current Live URL
+
+For the hackathon judging link, use the Render subdomain for simplicity:
+
+```text
+https://top-comment-studio.onrender.com/
+```
+
+The Render service is live on commit `6222a57` and has passed a hosted paid smoke test. The custom domain `top-comment.techmanstudios.com` can be finished later by adding a DreamHost `CNAME` record from host `top-comment` to `top-comment-studio.onrender.com` and verifying it in Render.
+
 ## Fastest Hosting Path: Render
 
 This repo includes a root [Render Blueprint](../render.yaml). After it is pushed to GitHub, create the Render service from:

@@ -63,6 +63,14 @@ YYYY-MM-DD — Agent:
 
 ```text
 2026-05-11 — GitHub Copilot:
+- Summary: Finalized the live Render deployment and chose the Render subdomain as the current judge URL for simplicity: https://top-comment-studio.onrender.com/. Fixed production CSS MIME serving and Docker startup by serving CSS as `text/css` and running `uvicorn` directly from the built Docker virtualenv. Render commit `6222a57` is live. Custom domain `top-comment.techmanstudios.com` is added in Render but intentionally deferred pending DreamHost DNS.
+- Validation: `uv run pytest` passed with 33 tests. Local Docker image `top-comment-studio:runtime-check` served `/health` and `/static/app.css` correctly. Render `/health` returned `runway_configured=true` and `runway_workflow_configured=true`. Hosted paid smoke through the deployed app created `episode_001`, reached `Render ready`, loaded the embedded video element, and exposed `Open video` to a signed CloudFront MP4.
+- Blockers: None for the onrender.com judging URL. Custom domain requires a DreamHost `CNAME` from host `top-comment` to `top-comment-studio.onrender.com` before Render can verify it.
+- Next step: Submit https://top-comment-studio.onrender.com/ as the working live app link; finish custom-domain DNS later only if branded URL polish is needed.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
 - Summary: Added a live deployment path for the judge URL. GitHub Pages is documented as static-only, while the working app should deploy to a server-backed Python/Docker host with Runway secrets stored in host environment variables. Added a root `Dockerfile`, `.dockerignore`, `render.yaml`, and `docs/LIVE_DEPLOYMENT.md` with Render Blueprint and Techman Studios subdomain/DreamHost DNS guidance.
 - Validation: `uv run pytest` passed with 33 tests. `docker build -t top-comment-studio:deploy-check .` passed after Docker Desktop was started, and the container served `/health` on local port 8088.
 - Blockers: Need the deployment files committed/pushed to GitHub before Render can import the Blueprint. Render account setup may require Bryan's browser login and payment/workspace selection.
