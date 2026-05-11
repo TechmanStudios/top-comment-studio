@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+import mimetypes
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -44,6 +45,7 @@ from .storage import ChainStore
 
 settings = get_settings()
 PACKAGE_DIR = Path(__file__).parent
+mimetypes.add_type("text/css", ".css")
 app = FastAPI(title=settings.app_name)
 templates = Jinja2Templates(directory=str(PACKAGE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(PACKAGE_DIR / "static")), name="static")
