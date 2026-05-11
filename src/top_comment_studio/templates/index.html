@@ -34,8 +34,11 @@
 
         <section class="panel intake-panel lab-frame">
             <div class="section-heading">
-                <p class="eyebrow">Signal intake</p>
-                <h2>Next Short Brief</h2>
+                <div>
+                    <p class="eyebrow">Signal intake</p>
+                    <h2>Next Short Brief</h2>
+                </div>
+                <p class="intake-cta">Try a real audience comment or a new what-happens-next idea.</p>
             </div>
             <form method="post" action="/package" class="grid-form">
                 <label class="span-2 primary-signal-field">
@@ -45,64 +48,63 @@
                 </label>
                 <details class="span-2 director-controls">
                     <summary>Director controls</summary>
-                    <p class="director-note">Only the audience comment is required. These optional fields steer tone,
-                        world, motion, camera, audio, and constraints; blank fields use safe demo defaults.</p>
+                    <p class="director-note">Hackathon demo view only. The render uses the proven v66 defaults.</p>
                     <div class="grid-form director-grid">
                         <label>
                             Previous video title
-                            <input name="previous_video_title" placeholder="The AI built a floating city">
+                            <input name="previous_video_title" placeholder="The AI built a floating city" readonly>
                         </label>
                         <label>
                             Previous video CTA
-                            <input name="previous_video_cta" placeholder="What should the AI add next?">
+                            <input name="previous_video_cta" placeholder="What should the AI add next?" readonly>
                         </label>
                         <label class="span-2">
                             Previous video summary
                             <textarea name="previous_video_summary" rows="3"
-                                placeholder="Briefly describe the previous episode"></textarea>
+                                placeholder="Briefly describe the previous episode" readonly></textarea>
                         </label>
                         <label>
                             Tone
-                            <input name="target_tone" value="curious, cinematic, participatory">
+                            <input name="target_tone" value="curious, cinematic, participatory" readonly>
                         </label>
                         <label>
                             Visual style
-                            <input name="visual_style" value="vertical cinematic YouTube Short">
+                            <input name="visual_style" value="vertical cinematic YouTube Short" readonly>
                         </label>
                         <label class="span-2">
                             Subject continuity
                             <input name="subject_focus"
-                                placeholder="What must stay recognizable from first frame to payoff?">
+                                placeholder="What must stay recognizable from first frame to payoff?" readonly>
                         </label>
                         <label class="span-2">
                             Scene world
                             <input name="scene_world"
-                                placeholder="Where does the idea happen, and what makes the world readable?">
+                                placeholder="Where does the idea happen, and what makes the world readable?" readonly>
                         </label>
                         <label>
                             Motion arc
                             <textarea name="motion_direction" rows="3"
-                                placeholder="Hook action, transformation, payoff movement"></textarea>
+                                placeholder="Hook action, transformation, payoff movement" readonly></textarea>
                         </label>
                         <label>
                             Camera language
                             <textarea name="camera_direction" rows="3"
-                                placeholder="Push-in, orbit, reveal, tracking, pace"></textarea>
+                                placeholder="Push-in, orbit, reveal, tracking, pace" readonly></textarea>
                         </label>
                         <label>
                             Audio design
                             <textarea name="audio_direction" rows="3"
-                                placeholder="Ambience, motion sounds, impact accents, final hit"></textarea>
+                                placeholder="Ambience, motion sounds, impact accents, final hit" readonly></textarea>
                         </label>
                         <label>
                             Quality constraints
                             <textarea name="quality_constraints" rows="3"
-                                placeholder="Anything to avoid beyond the default safety rules"></textarea>
+                                placeholder="Anything to avoid beyond the default safety rules" readonly></textarea>
                         </label>
                         <label class="span-2">
                             Bryan's creative notes
                             <textarea name="creative_notes" rows="3"
-                                placeholder="Optional direction for the next episode"></textarea>
+                                placeholder="Optional direction for the next episode" readonly></textarea>
                         </label>
                     </div>
                 </details>

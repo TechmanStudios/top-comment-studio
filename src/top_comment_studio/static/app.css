@@ -456,6 +456,20 @@ li {
     font-weight: 800;
 }
 
+.intake-cta {
+    max-width: 360px;
+    margin: 0 0 14px;
+    padding: 9px 11px;
+    border: 1px solid rgba(98, 209, 203, 0.24);
+    border-left: 3px solid var(--cyan);
+    border-radius: 6px;
+    background: rgba(98, 209, 203, 0.065);
+    color: var(--muted-strong);
+    font-size: 0.86rem;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
 .grid-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -497,6 +511,20 @@ li {
 
 .director-grid {
     margin-top: 16px;
+}
+
+.director-controls input[readonly],
+.director-controls textarea[readonly] {
+    border-color: rgba(244, 239, 229, 0.12);
+    background: rgba(244, 239, 229, 0.055);
+    color: var(--muted-strong);
+    cursor: default;
+}
+
+.director-controls input[readonly]:focus,
+.director-controls textarea[readonly]:focus {
+    border-color: rgba(98, 209, 203, 0.26);
+    outline: none;
 }
 
 label {

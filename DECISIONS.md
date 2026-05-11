@@ -17,6 +17,18 @@ Follow-up:
 
 ## Decisions
 
+### 2026-05-11 — Lock Director Controls For Competition Demo
+
+Decision: Keep the Director Controls section visible on the intake page, but make its fields read-only and ignore posted Director Control values in the public `/package` route.
+
+Why: A customized Director Controls test produced a Runway completion with no exposed workflow output. The competition path should keep the audience comment editable while preserving the paid-proven v66 prompt defaults.
+
+Alternatives considered: Remove the section entirely, keep the fields editable and rely on the user to avoid risky edits, or rebuild the Runway workflow around every control variant.
+
+Tradeoffs: The judge-facing flow is safer and simpler, but quick creative customization from the homepage is paused. Programmatic/package API paths can still create `CommentInput` records with custom controls for internal tests and future workflow work.
+
+Follow-up: Re-enable editable controls only after a small set of custom prompt variants completes paid smoke tests with exposed MP4 outputs.
+
 ### 2026-05-11 — Use Render Subdomain For Judging
 
 Decision: Use `https://top-comment-studio.onrender.com/` as the active judge URL for now, leaving `top-comment.techmanstudios.com` as a deferred polish item.

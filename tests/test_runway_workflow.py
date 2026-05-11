@@ -206,8 +206,10 @@ def test_homepage_has_ready_demo_signal_and_collapsed_controls(monkeypatch, tmp_
 
     assert response.status_code == 200
     assert "storm-powered city forming in the clouds" in response.text
+    assert "Try a real audience comment" in response.text
     assert "Director controls" in response.text
-    assert "blank fields use safe demo defaults" in response.text
+    assert "Hackathon demo view only" in response.text
+    assert 'name="target_tone" value="curious, cinematic, participatory" readonly' in response.text
     assert "Duration seconds" not in response.text
 
 
@@ -235,7 +237,18 @@ def test_create_package_route_starts_render_without_second_approval(monkeypatch,
 
     response = TestClient(app_module.app).post(
         "/package",
-        data={"selected_comment": "Make the video a city powered by storms."},
+        data={
+            "selected_comment": "Make the video a city powered by storms.",
+            "target_tone": "chaotic test override",
+            "visual_style": "unstable test style",
+            "creative_notes": "force a custom post-generation branch",
+            "subject_focus": "change the subject every shot",
+            "scene_world": "break the proven world defaults",
+            "motion_direction": "use a disruptive motion test",
+            "camera_direction": "use a disruptive camera test",
+            "audio_direction": "use a disruptive audio test",
+            "quality_constraints": "ignore normal constraints",
+        },
     )
     record = ChainStore(tmp_path).latest()
 
@@ -246,6 +259,14 @@ def test_create_package_route_starts_render_without_second_approval(monkeypatch,
     assert "Start render" not in response.text
     assert "Creator-approved for v66 Runway generation" not in response.text
     assert RouteWorkflowClient.instances[0].workflow_requests[0]["workflow_id"] == "workflow-123"
+    assert record.production_context.creative_notes == ""
+    assert record.production_context.target_tone == "curious, cinematic, participatory"
+    assert record.production_context.visual_style == "vertical cinematic YouTube Short"
+    packet_json = RouteWorkflowClient.instances[0].workflow_requests[0]["node_outputs"][
+        "node-av_director_packet"
+    ]["prompt"]["value"]
+    assert "custom post-generation branch" not in packet_json
+    assert "disruptive audio test" not in packet_json
 
 
 def test_direct_generation_blockers_require_approval_secret_and_safe_comment():

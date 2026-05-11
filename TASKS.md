@@ -63,6 +63,14 @@ YYYY-MM-DD — Agent:
 
 ```text
 2026-05-11 — GitHub Copilot:
+- Summary: Locked the homepage Director Controls for the competition flow. The section remains visible, but its fields are read-only, and the public `/package` route now ignores submitted Director Control values so custom tone/world/motion/audio edits cannot perturb the paid-proven v66 workflow payload. Programmatic `CommentInput` customization remains available through internal/API paths.
+- Validation: `uv run pytest` passed with 33 tests. `git diff --check` reported no whitespace errors, only the existing Windows CRLF warning for `DECISIONS.md`.
+- Blockers: No blocker for the locked demo path. Editable controls should stay paused until custom prompt variants are paid-smoked and return exposed MP4 outputs.
+- Next step: Rehearse the deployed app with only the selected audience comment edited, then redeploy this change before judge testing.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
 - Summary: Finalized the live Render deployment and chose the Render subdomain as the current judge URL for simplicity: https://top-comment-studio.onrender.com/. Fixed production CSS MIME serving and Docker startup by serving CSS as `text/css` and running `uvicorn` directly from the built Docker virtualenv. Render commit `6222a57` is live. Custom domain `top-comment.techmanstudios.com` is added in Render but intentionally deferred pending DreamHost DNS.
 - Validation: `uv run pytest` passed with 33 tests. Local Docker image `top-comment-studio:runtime-check` served `/health` and `/static/app.css` correctly. Render `/health` returned `runway_configured=true` and `runway_workflow_configured=true`. Hosted paid smoke through the deployed app created `episode_001`, reached `Render ready`, loaded the embedded video element, and exposed `Open video` to a signed CloudFront MP4.
 - Blockers: None for the onrender.com judging URL. Custom domain requires a DreamHost `CNAME` from host `top-comment` to `top-comment-studio.onrender.com` before Render can verify it.
