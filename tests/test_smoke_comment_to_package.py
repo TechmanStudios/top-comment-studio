@@ -14,10 +14,19 @@ def test_comment_to_package_smoke(tmp_path):
     saved_path = ChainStore(tmp_path).save(record)
 
     assert record.guardrail.status == "approved"
-    assert "Seedance 2.0" == record.package.workflow_model_stack.video_generation
-    assert "OpenAI Images 2.0" == record.package.workflow_model_stack.image_generation
+    assert (
+        "Gen-4.5 shot studies + Veo 3.1 unified audio-video final"
+        == record.package.workflow_model_stack.video_generation
+    )
+    assert (
+        "Nano Banana Pro (Gemini 3 Pro Image)"
+        == record.package.workflow_model_stack.image_generation
+    )
+    assert "gemini_image3_pro" == record.package.workflow_model_stack.runway_image_model_id
     assert "GPT 5.5" == record.package.workflow_model_stack.llm_text_generation
     assert "floating city" in record.package.video_prompt.lower()
+    assert "floating city" in record.package.av_director_packet.audience_signal.lower()
+    assert "audio" in record.package.video_prompt.lower()
     assert saved_path.exists()
 
 

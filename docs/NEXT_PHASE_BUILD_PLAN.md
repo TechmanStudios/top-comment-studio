@@ -42,7 +42,8 @@ This keeps the first implementation Python-first, simple to run, easy for agents
 ## Current Workflow Model Stack
 
 - Text generation in workflows: GPT 5.5
-- Image generation in workflows: OpenAI Images 2.0
+- Image generation in workflows/direct API: Nano Banana Pro / Gemini 3 Pro Image (`gemini_image3_pro` in the API)
+- Fast image fallback: Nano Banana / Gemini 2.5 Flash (`gemini_2.5_flash` in the API)
 - Video generation in workflows: Seedance 2.0
 
 ## Initial Commands To Add

@@ -1,52 +1,398 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ record.episode_id }} · {{ settings.app_name }}</title>
-  <link rel="stylesheet" href="/static/app.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% set workflow_refreshing = record.runway.invocation_id and record.runway.status | lower in ["submitted",
+    "running"] %}
+    {% set direct_refreshing = (record.runway_direct.image_task_id or record.runway_direct.video_task_id) and
+    record.runway_direct.status | lower in ["image_submitted", "video_submitted", "pending", "running"] %}
+    {% set image_board_refreshing = record.runway_image_board.status | lower in ["submitted", "running"] or
+    record.runway_image_board.video_status | lower in ["video_submitted", "pending", "running"] %}
+    {% if workflow_refreshing or direct_refreshing or image_board_refreshing %}
+    <meta http-equiv="refresh" content="20">
+    {% endif %}
+    <title>{{ record.episode_id }} · {{ settings.app_name }}</title>
+    <link rel="stylesheet" href="/static/app.css">
 </head>
+
 <body>
-  <main class="shell">
-    <section class="header">
-      <p class="eyebrow">Draft package saved to {{ saved_path }}</p>
-      <h1>{{ record.title }}</h1>
-      <p>{{ record.summary }}</p>
-      <a href="/" class="button-link">Create another</a>
-    </section>
+    <main class="shell">
+        <section class="header">
+            <p class="eyebrow">Draft package saved to {{ saved_path }}</p>
+            <h1>{{ record.title }}</h1>
+            <p>{{ record.summary }}</p>
+            <a href="/" class="button-link">Create another</a>
+        </section>
 
-    <section class="panel status-{{ record.guardrail.status }}">
-      <h2>Guardrail review</h2>
-      <p><strong>{{ record.guardrail.status }}</strong></p>
-      <p>{{ record.guardrail.reason }}</p>
-      <p>{{ record.guardrail.safe_interpretation }}</p>
-    </section>
+        <section class="panel status-{{ record.guardrail.status }}">
+            <h2>Guardrail review</h2>
+            <p><strong>{{ record.guardrail.status }}</strong></p>
+            <p>{{ record.guardrail.reason }}</p>
+            <p>{{ record.guardrail.safe_interpretation }}</p>
+        </section>
 
-    <section class="panel">
-      <h2>Shorts package</h2>
-      <dl>
-        <dt>Hook</dt>
-        <dd>{{ record.package.hook }}</dd>
-        <dt>Script</dt>
-        <dd>{{ record.package.script }}</dd>
-        <dt>Visual prompt</dt>
-        <dd>{{ record.package.visual_prompt }}</dd>
-        <dt>Video prompt</dt>
-        <dd>{{ record.package.video_prompt }}</dd>
-        <dt>Next CTA</dt>
-        <dd>{{ record.package.next_cta }}</dd>
-      </dl>
-    </section>
+        <section class="panel">
+            <h2>Shorts package</h2>
+            <dl>
+                <dt>Hook</dt>
+                <dd>{{ record.package.hook }}</dd>
+                <dt>Script</dt>
+                <dd>{{ record.package.script }}</dd>
+                <dt>Visual prompt</dt>
+                <dd>{{ record.package.visual_prompt }}</dd>
+                <dt>Video prompt</dt>
+                <dd>{{ record.package.video_prompt }}</dd>
+                <dt>Next CTA</dt>
+                <dd>{{ record.package.next_cta }}</dd>
+            </dl>
+            <h3>Unified AV director packet</h3>
+            <dl>
+                <dt>Audience signal</dt>
+                <dd>{{ record.package.av_director_packet.audience_signal }}</dd>
+                <dt>Creator intent</dt>
+                <dd>{{ record.package.av_director_packet.creator_intent }}</dd>
+                <dt>Subject</dt>
+                <dd>{{ record.package.av_director_packet.subject_focus }}</dd>
+                <dt>World</dt>
+                <dd>{{ record.package.av_director_packet.scene_world }}</dd>
+                <dt>Motion</dt>
+                <dd>{{ record.package.av_director_packet.motion_arc }}</dd>
+                <dt>Camera</dt>
+                <dd>{{ record.package.av_director_packet.camera_language }}</dd>
+                <dt>Audio</dt>
+                <dd>{{ record.package.av_director_packet.audio_design }}</dd>
+                <dt>Sync</dt>
+                <dd>{{ record.package.av_director_packet.audio_visual_sync }}</dd>
+                <dt>Constraints</dt>
+                <dd>{{ record.package.av_director_packet.negative_constraints }}</dd>
+            </dl>
+        </section>
 
-    <section class="panel">
-      <h2>Workflow model stack</h2>
-      <ul>
-        <li>Text: {{ record.package.workflow_model_stack.llm_text_generation }}</li>
-        <li>Images: {{ record.package.workflow_model_stack.image_generation }}</li>
-        <li>Video: {{ record.package.workflow_model_stack.video_generation }}</li>
-      </ul>
-      <p><a href="{{ record.package.workflow_model_stack.workflow_registry_url }}">Open workflow endpoint registry</a></p>
-    </section>
-  </main>
+        <section class="panel">
+            <h2>Workflow model stack</h2>
+            <ul>
+                <li>Text: {{ record.package.workflow_model_stack.llm_text_generation }}</li>
+                <li>Images: {{ record.package.workflow_model_stack.image_generation }}</li>
+                <li>Video: {{ record.package.workflow_model_stack.video_generation }}</li>
+            </ul>
+            <p><a href="{{ record.package.workflow_model_stack.workflow_registry_url }}">Open workflow endpoint
+                    registry</a></p>
+        </section>
+
+        <section class="panel">
+            <h2>Runway workflow handoff</h2>
+            {% if runway_message %}
+            <p class="notice success">{{ runway_message }}</p>
+            {% endif %}
+            {% if runway_error %}
+            <p class="notice error">{{ runway_error }}</p>
+            {% endif %}
+            <dl>
+                <dt>Workflow</dt>
+                <dd>{{ runway_preview.workflow_name }}</dd>
+                <dt>Endpoint</dt>
+                <dd>{{ runway_preview.endpoint_path or "Not configured" }}</dd>
+                <dt>Runway clip</dt>
+                <dd>{{ runway_preview.duration_seconds }} seconds · {{ runway_preview.aspect_ratio }}</dd>
+            </dl>
+
+            {% if runway_preview.configuration_issues %}
+            <ul class="issue-list">
+                {% for issue in runway_preview.configuration_issues %}
+                <li>{{ issue }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <details>
+                <summary>Preview node outputs</summary>
+                <pre>{{ runway_preview.node_outputs | tojson }}</pre>
+            </details>
+
+            {% if record.runway.invocation_id %}
+            <section class="runway-state">
+                <h3>Runway invocation</h3>
+                <dl>
+                    <dt>ID</dt>
+                    <dd>{{ record.runway.invocation_id }}</dd>
+                    <dt>Status</dt>
+                    <dd>{{ record.runway.status }}</dd>
+                    {% if runway_progress_percent %}
+                    <dt>Progress</dt>
+                    <dd>
+                        <div class="progress-row">
+                            <span>{{ runway_progress_percent }}</span>
+                            <div class="progress-track" aria-hidden="true">
+                                <div class="progress-fill" style="width: {{ runway_progress_width }}"></div>
+                            </div>
+                        </div>
+                    </dd>
+                    {% endif %}
+                    {% if runway_asset_counts %}
+                    <dt>Outputs</dt>
+                    <dd>
+                        {% for label, count in runway_asset_counts.items() %}
+                        {{ count }} {{ label }}{% if count != 1 %}s{% endif %}{% if not loop.last %} · {% endif %}
+                        {% endfor %}
+                    </dd>
+                    {% endif %}
+                    {% if record.runway.failure %}
+                    <dt>Failure</dt>
+                    <dd>{{ record.runway.failure }}</dd>
+                    {% endif %}
+                </dl>
+                {% if record.runway.output_urls %}
+                <ul class="asset-list">
+                    {% for url in record.runway.output_urls %}
+                    <li><a href="{{ url }}">{{ url }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <a href="/package/{{ record.episode_id }}/runway-status" class="button-link secondary">Refresh
+                    status</a>
+            </section>
+            {% endif %}
+
+            <form method="post" action="/package/{{ record.episode_id }}/submit-runway" class="approval-form">
+                <label class="check-row">
+                    <input type="checkbox" name="creator_approved" value="true">
+                    Creator-approved for Runway generation
+                </label>
+                <button type="submit" {% if not runway_preview.can_submit or record.guardrail.status=="rejected"
+                    %}disabled{% endif %}>
+                    Submit to Runway
+                </button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Nine-image reference board</h2>
+            {% if image_board_message %}
+            <p class="notice success">{{ image_board_message }}</p>
+            {% endif %}
+            {% if image_board_error %}
+            <p class="notice error">{{ image_board_error }}</p>
+            {% endif %}
+            <dl>
+                <dt>Status</dt>
+                <dd>{{ record.runway_image_board.status }}</dd>
+                <dt>Rows</dt>
+                <dd>3 workflow rows · 9 Nano Banana references</dd>
+                {% if image_board_asset_counts %}
+                <dt>Outputs</dt>
+                <dd>
+                    {% for label, count in image_board_asset_counts.items() %}
+                    {{ count }} {{ label }}{% if count != 1 %}s{% endif %}{% if not loop.last %} · {% endif %}
+                    {% endfor %}
+                </dd>
+                {% endif %}
+            </dl>
+
+            {% if image_board_configuration_issues %}
+            <ul class="issue-list">
+                {% for issue in image_board_configuration_issues %}
+                <li>{{ issue }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if image_board_row_views %}
+            <section class="runway-state">
+                <h3>Board rows</h3>
+                <div class="row-status-grid">
+                    {% for row in image_board_row_views %}
+                    <div class="row-status">
+                        <strong>{{ row.label }}</strong>
+                        <span>{{ row.status }}</span>
+                        {% if row.progress_percent %}
+                        <div class="progress-row">
+                            <span>{{ row.progress_percent }}</span>
+                            <div class="progress-track" aria-hidden="true">
+                                <div class="progress-fill" style="width: {{ row.progress_width }}"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if row.asset_counts %}
+                        <span>
+                            {% for label, count in row.asset_counts.items() %}
+                            {{ count }} {{ label }}{% if count != 1 %}s{% endif %}{% if not loop.last %} · {% endif %}
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+                        {% if row.failure %}
+                        <span class="error-text">{{ row.failure }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <a href="/package/{{ record.episode_id }}/runway-image-board-status"
+                    class="button-link secondary">Refresh
+                    board status</a>
+            </section>
+            {% endif %}
+
+            {% if image_board_image_urls %}
+            <div class="image-board-grid">
+                {% for url in image_board_image_urls %}
+                <figure>
+                    <a href="{{ url }}"><img src="{{ url }}" alt="Reference image {{ loop.index }}"></a>
+                    <figcaption>Ref {{ "%02d" | format(loop.index) }}</figcaption>
+                </figure>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if record.runway_image_board.video_task_id %}
+            <section class="runway-state">
+                <h3>Board-referenced Veo 3.1 final video</h3>
+                <dl>
+                    <dt>Task</dt>
+                    <dd>{{ record.runway_image_board.video_task_id }}</dd>
+                    {% if record.runway_image_board.video_reference_image_url %}
+                    <dt>Reference image</dt>
+                    <dd><a href="{{ record.runway_image_board.video_reference_image_url }}">opening frame</a></dd>
+                    {% endif %}
+                    <dt>Status</dt>
+                    <dd>{{ record.runway_image_board.video_status }}</dd>
+                    {% if image_board_video_progress_percent %}
+                    <dt>Progress</dt>
+                    <dd>
+                        <div class="progress-row">
+                            <span>{{ image_board_video_progress_percent }}</span>
+                            <div class="progress-track" aria-hidden="true">
+                                <div class="progress-fill" style="width: {{ image_board_video_progress_width }}"></div>
+                            </div>
+                        </div>
+                    </dd>
+                    {% endif %}
+                    {% if image_board_video_asset_counts %}
+                    <dt>Outputs</dt>
+                    <dd>
+                        {% for label, count in image_board_video_asset_counts.items() %}
+                        {{ count }} {{ label }}{% if count != 1 %}s{% endif %}{% if not loop.last %} · {% endif %}
+                        {% endfor %}
+                    </dd>
+                    {% endif %}
+                    {% if record.runway_image_board.video_failure %}
+                    <dt>Failure</dt>
+                    <dd>{{ record.runway_image_board.video_failure }}</dd>
+                    {% endif %}
+                </dl>
+                {% if record.runway_image_board.video_output_urls %}
+                <ul class="asset-list">
+                    {% for url in record.runway_image_board.video_output_urls %}
+                    <li><a href="{{ url }}">{{ url }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <a href="/package/{{ record.episode_id }}/runway-image-board-status"
+                    class="button-link secondary">Refresh
+                    MP4 status</a>
+            </section>
+            {% endif %}
+
+            <form method="post" action="/package/{{ record.episode_id }}/submit-runway-image-board"
+                class="approval-form">
+                <label class="check-row">
+                    <input type="checkbox" name="creator_approved" value="true">
+                    Creator-approved for image-board generation
+                </label>
+                <button type="submit" {% if not image_board_can_submit %}disabled{% endif %}>
+                    Submit image board
+                </button>
+            </form>
+
+            <form method="post" action="/package/{{ record.episode_id }}/submit-runway-image-board-video"
+                class="approval-form">
+                <label class="check-row">
+                    <input type="checkbox" name="creator_approved" value="true">
+                    Creator-approved for Veo 3.1 final video
+                </label>
+                <button type="submit" {% if image_board_image_urls | length < 9 %}disabled{% endif %}>
+                    Create final video from board
+                </button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Nano Banana to Gen-4.5 direct shot</h2>
+            {% if direct_runway_message %}
+            <p class="notice success">{{ direct_runway_message }}</p>
+            {% endif %}
+            {% if direct_runway_error %}
+            <p class="notice error">{{ direct_runway_error }}</p>
+            {% endif %}
+            <dl>
+                <dt>Image</dt>
+                <dd>{{ record.runway_direct.image_model }} · {{ record.runway_direct.image_ratio }}</dd>
+                <dt>Video</dt>
+                <dd>{{ record.runway_direct.video_model }} · {{ record.runway_direct.video_ratio }} · {{
+                    record.runway_direct.duration_seconds }} seconds</dd>
+                <dt>Status</dt>
+                <dd>{{ record.runway_direct.status }}</dd>
+                {% if direct_progress_percent %}
+                <dt>Progress</dt>
+                <dd>
+                    <div class="progress-row">
+                        <span>{{ direct_progress_percent }}</span>
+                        <div class="progress-track" aria-hidden="true">
+                            <div class="progress-fill" style="width: {{ direct_progress_width }}"></div>
+                        </div>
+                    </div>
+                </dd>
+                {% endif %}
+                {% if direct_asset_counts %}
+                <dt>Outputs</dt>
+                <dd>
+                    {% for label, count in direct_asset_counts.items() %}
+                    {{ count }} {{ label }}{% if count != 1 %}s{% endif %}{% if not loop.last %} · {% endif %}
+                    {% endfor %}
+                </dd>
+                {% endif %}
+            </dl>
+
+            {% if record.runway_direct.image_task_id or record.runway_direct.video_task_id %}
+            <section class="runway-state">
+                <h3>Direct generation</h3>
+                <dl>
+                    {% if record.runway_direct.image_task_id %}
+                    <dt>Nano Banana task</dt>
+                    <dd>{{ record.runway_direct.image_task_id }}</dd>
+                    {% endif %}
+                    {% if record.runway_direct.video_task_id %}
+                    <dt>Gen-4.5 task</dt>
+                    <dd>{{ record.runway_direct.video_task_id }}</dd>
+                    {% endif %}
+                    {% if record.runway_direct.failure %}
+                    <dt>Failure</dt>
+                    <dd>{{ record.runway_direct.failure }}</dd>
+                    {% endif %}
+                </dl>
+                {% if record.runway_direct.output_urls %}
+                <ul class="asset-list">
+                    {% for url in record.runway_direct.output_urls %}
+                    <li><a href="{{ url }}">{{ url }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <a href="/package/{{ record.episode_id }}/runway-direct-status" class="button-link secondary">Refresh
+                    direct status</a>
+            </section>
+            {% endif %}
+
+            <form method="post" action="/package/{{ record.episode_id }}/submit-runway-direct" class="approval-form">
+                <label class="check-row">
+                    <input type="checkbox" name="creator_approved" value="true">
+                    Creator-approved for direct Runway generation
+                </label>
+                <button type="submit" {% if not direct_can_submit %}disabled{% endif %}>
+                    Submit direct generation
+                </button>
+            </form>
+        </section>
+    </main>
 </body>
+
 </html>

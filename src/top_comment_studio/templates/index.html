@@ -1,80 +1,115 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ settings.app_name }}</title>
-  <link rel="stylesheet" href="/static/app.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ settings.app_name }}</title>
+    <link rel="stylesheet" href="/static/app.css">
 </head>
+
 <body>
-  <main class="shell">
-    <section class="header">
-      <p class="eyebrow">Audience-in-the-loop studio</p>
-      <h1>Top Comment Studio</h1>
-      <p>Turn a selected audience comment into a safe Shorts package and Runway workflow handoff.</p>
-    </section>
+    <main class="shell">
+        <section class="header">
+            <p class="eyebrow">Audience-in-the-loop studio</p>
+            <h1>Top Comment Studio</h1>
+            <p>Turn a selected audience comment into a safe Shorts package and Runway workflow handoff.</p>
+        </section>
 
-    <section class="panel">
-      <form method="post" action="/package" class="grid-form">
-        <label>
-          Previous video title
-          <input name="previous_video_title" placeholder="The AI built a floating city">
-        </label>
-        <label>
-          Previous video CTA
-          <input name="previous_video_cta" placeholder="What should the AI add next?">
-        </label>
-        <label class="span-2">
-          Previous video summary
-          <textarea name="previous_video_summary" rows="3" placeholder="Briefly describe the previous episode"></textarea>
-        </label>
-        <label class="span-2">
-          Selected audience comment
-          <textarea name="selected_comment" rows="4" required placeholder="Make the city powered by storms"></textarea>
-        </label>
-        <label>
-          Author
-          <input name="author_display_name" placeholder="@viewer">
-        </label>
-        <label>
-          Selection reason
-          <input name="selection_reason" value="Top usable comment">
-        </label>
-        <label>
-          Likes
-          <input name="like_count" type="number" value="0" min="0">
-        </label>
-        <label>
-          Replies
-          <input name="reply_count" type="number" value="0" min="0">
-        </label>
-        <label>
-          Tone
-          <input name="target_tone" value="curious, cinematic, participatory">
-        </label>
-        <label>
-          Duration seconds
-          <input name="target_duration_seconds" type="number" value="35" min="15" max="60">
-        </label>
-        <label class="span-2">
-          Visual style
-          <input name="visual_style" value="vertical cinematic YouTube Short">
-        </label>
-        <label class="span-2">
-          Bryan's creative notes
-          <textarea name="creative_notes" rows="3" placeholder="Optional direction for the next episode"></textarea>
-        </label>
-        <button type="submit">Generate package</button>
-      </form>
-    </section>
+        <section class="panel">
+            <form method="post" action="/package" class="grid-form">
+                <label>
+                    Previous video title
+                    <input name="previous_video_title" placeholder="The AI built a floating city">
+                </label>
+                <label>
+                    Previous video CTA
+                    <input name="previous_video_cta" placeholder="What should the AI add next?">
+                </label>
+                <label class="span-2">
+                    Previous video summary
+                    <textarea name="previous_video_summary" rows="3"
+                        placeholder="Briefly describe the previous episode"></textarea>
+                </label>
+                <label class="span-2">
+                    Selected audience comment
+                    <textarea name="selected_comment" rows="4" required
+                        placeholder="Make the city powered by storms"></textarea>
+                </label>
+                <label>
+                    Author
+                    <input name="author_display_name" placeholder="@viewer">
+                </label>
+                <label>
+                    Selection reason
+                    <input name="selection_reason" value="Top usable comment">
+                </label>
+                <label>
+                    Likes
+                    <input name="like_count" type="number" value="0" min="0">
+                </label>
+                <label>
+                    Replies
+                    <input name="reply_count" type="number" value="0" min="0">
+                </label>
+                <label>
+                    Tone
+                    <input name="target_tone" value="curious, cinematic, participatory">
+                </label>
+                <label>
+                    Duration seconds
+                    <input name="target_duration_seconds" type="number" value="35" min="15" max="60">
+                </label>
+                <label class="span-2">
+                    Visual style
+                    <input name="visual_style" value="vertical cinematic YouTube Short">
+                </label>
+                <label class="span-2">
+                    Subject continuity
+                    <input name="subject_focus" placeholder="What must stay recognizable from first frame to payoff?">
+                </label>
+                <label class="span-2">
+                    Scene world
+                    <input name="scene_world"
+                        placeholder="Where does the idea happen, and what makes the world readable?">
+                </label>
+                <label>
+                    Motion arc
+                    <textarea name="motion_direction" rows="3"
+                        placeholder="Hook action, transformation, payoff movement"></textarea>
+                </label>
+                <label>
+                    Camera language
+                    <textarea name="camera_direction" rows="3"
+                        placeholder="Push-in, orbit, reveal, tracking, pace"></textarea>
+                </label>
+                <label>
+                    Audio design
+                    <textarea name="audio_direction" rows="3"
+                        placeholder="Ambience, motion sounds, impact accents, final hit"></textarea>
+                </label>
+                <label>
+                    Quality constraints
+                    <textarea name="quality_constraints" rows="3"
+                        placeholder="Anything to avoid beyond the default safety rules"></textarea>
+                </label>
+                <label class="span-2">
+                    Bryan's creative notes
+                    <textarea name="creative_notes" rows="3"
+                        placeholder="Optional direction for the next episode"></textarea>
+                </label>
+                <button type="submit">Generate package</button>
+            </form>
+        </section>
 
-    {% if latest %}
-    <section class="panel compact">
-      <h2>Latest local draft</h2>
-      <p><strong>{{ latest.episode_id }}</strong> · {{ latest.title }}</p>
-      <p>{{ latest.guardrail.status }} · {{ latest.package.next_cta }}</p>
-    </section>
-    {% endif %}
-  </main>
+        {% if latest %}
+        <section class="panel compact">
+            <h2>Latest local draft</h2>
+            <p><strong>{{ latest.episode_id }}</strong> · {{ latest.title }}</p>
+            <p>{{ latest.guardrail.status }} · {{ latest.package.next_cta }}</p>
+        </section>
+        {% endif %}
+    </main>
 </body>
+
 </html>

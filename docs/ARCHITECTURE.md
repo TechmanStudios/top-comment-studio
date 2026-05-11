@@ -53,7 +53,7 @@ Provider:
 Model(s):
 
 - Runway custom workflows from the Techman Studios workflow endpoint registry.
-- Preferred workflow stack: GPT 5.5 for text generation, OpenAI Images 2.0 for image generation, and Seedance 2.0 for video generation.
+- Preferred workflow stack: GPT 5.5 for text generation, Nano Banana Pro / Gemini 3 Pro Image (`gemini_image3_pro`) for image generation, Nano Banana / Gemini 2.5 Flash (`gemini_2.5_flash`) as the fast fallback, and Seedance 2.0 for video generation.
 - Candidate supporting media models: Gen-4.5, Gen-4 Image/Turbo, Veo 3/3.1, ElevenLabs audio tools.
 
 Prompt locations:

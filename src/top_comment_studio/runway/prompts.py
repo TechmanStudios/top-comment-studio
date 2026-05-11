@@ -1,6 +1,6 @@
-DEFAULT_ASPECT_RATIO = "720:1280"
-DEFAULT_VIDEO_MODEL = "Seedance 2.0"
-DEFAULT_IMAGE_MODEL = "OpenAI Images 2.0"
+DEFAULT_ASPECT_RATIO = "1080:1920"
+DEFAULT_VIDEO_MODEL = "Gen-4.5 shot studies + Veo 3.1 unified audio-video final"
+DEFAULT_IMAGE_MODEL = "Nano Banana Pro (Gemini 3 Pro Image)"
 DEFAULT_LLM_MODEL = "GPT 5.5"
 
 

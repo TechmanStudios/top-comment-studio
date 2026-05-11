@@ -116,5 +116,7 @@ Keep implementation practical, modern, and understandable. Bryan prefers Python 
 
 Use straightforward names and avoid unnecessary abstractions.
 
-## Additional Instructions 
+## Additional Instructions
 Read AI_YOUTUBE_PROJECT_PHILOSOPHY.md before designing features. Preserve the Audience-in-the-Loop mechanic and short-form-first MVP direction.
+
+For Runway workflow build, publish, invocation, or debugging work, read `docs/RUNWAY_WORKFLOW_AGENT_HELP.md` before changing code or spending API credits.
