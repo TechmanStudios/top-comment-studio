@@ -17,6 +17,18 @@ Follow-up:
 
 ## Decisions
 
+### 2026-05-11 — One-Click Judge Render Flow
+
+Decision: Treat the intake page's `Generate render` button as the only visible judge-facing paid action. It creates the episode package, submits the configured v66 workflow with locked defaults, and sends the user to the render monitor page.
+
+Why: The demo needs one clear action from audience signal to video render. Earlier two-step approval/package flows and package-page diagnostic lanes added confusion and exposed unproven variants.
+
+Alternatives considered: Keep a separate package page approval button, expose the image-board/direct-generation lanes, or make Director Controls editable for live prompt variation.
+
+Tradeoffs: The public flow is simpler and safer, but it hides some internal package/debug detail that remains useful for future engineering work.
+
+Follow-up: Keep the one-click flow for final submission. Reintroduce advanced controls or asset lanes only behind an admin/debug surface after paid smoke tests prove those variants return MP4 outputs.
+
 ### 2026-05-11 — Lock Director Controls For Competition Demo
 
 Decision: Keep the Director Controls section visible on the intake page, but make its fields read-only and ignore posted Director Control values in the public `/package` route.

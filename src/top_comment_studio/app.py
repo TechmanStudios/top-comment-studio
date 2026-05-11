@@ -45,6 +45,8 @@ from .storage import ChainStore
 
 settings = get_settings()
 PACKAGE_DIR = Path(__file__).parent
+WORKFLOW_OUTPUT_PROPAGATION_GRACE_SECONDS = 12 * 60
+WORKFLOW_OUTPUT_PROPAGATION_PROGRESS = 0.96
 mimetypes.add_type("text/css", ".css")
 app = FastAPI(title=settings.app_name)
 templates = Jinja2Templates(directory=str(PACKAGE_DIR / "templates"))
@@ -227,12 +229,21 @@ def runway_status(request: Request, episode_id: str) -> HTMLResponse:
         saved_path = store.save(record)
         return render_package_response(request, record, saved_path, runway_error=str(exc))
 
+    status = str(response.get("status", "unknown"))
+    progress = extract_progress(response)
+    output_urls = extract_output_urls(response)
+    failure = extract_failure(response)
+    if workflow_output_still_propagating(record, response, output_urls, now):
+        status = "processing"
+        progress = progress if progress is not None else WORKFLOW_OUTPUT_PROPAGATION_PROGRESS
+        failure = ""
+
     record.runway = record.runway.model_copy(
         update={
-            "status": str(response.get("status", "unknown")),
-            "progress": extract_progress(response),
-            "output_urls": extract_output_urls(response),
-            "failure": extract_failure(response),
+            "status": status,
+            "progress": progress,
+            "output_urls": output_urls,
+            "failure": failure,
             "updated_at": now,
             "last_response": response,
         }
@@ -1043,6 +1054,38 @@ def advance_direct_generation(
 
 def current_timestamp() -> str:
     return datetime.now(UTC).isoformat()
+
+
+def workflow_output_still_propagating(
+    record: EpisodeRecord,
+    response: dict[str, Any],
+    output_urls: list[str],
+    now: str,
+) -> bool:
+    if str(response.get("status", "")).upper() != "SUCCEEDED":
+        return False
+    if output_urls or response.get("output"):
+        return False
+
+    elapsed_seconds = seconds_since(record.runway.submitted_at, now)
+    return (
+        elapsed_seconds is not None and elapsed_seconds < WORKFLOW_OUTPUT_PROPAGATION_GRACE_SECONDS
+    )
+
+
+def seconds_since(start_timestamp: str, end_timestamp: str) -> float | None:
+    if not start_timestamp or not end_timestamp:
+        return None
+    try:
+        start = datetime.fromisoformat(start_timestamp)
+        end = datetime.fromisoformat(end_timestamp)
+    except ValueError:
+        return None
+    if start.tzinfo is None:
+        start = start.replace(tzinfo=UTC)
+    if end.tzinfo is None:
+        end = end.replace(tzinfo=UTC)
+    return (end - start).total_seconds()
 
 
 def extract_output_urls(value: Any) -> list[str]:

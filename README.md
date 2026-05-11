@@ -4,7 +4,7 @@ Top Comment Studio is a weekend hackathon project for turning audience comments 
 
 ## Current Status
 
-This repository now has a runnable FastAPI scaffold for the manual comment-to-Shorts-package flow, plus creator-approved Runway handoff paths. The current hackathon lane converts the audience signal into a unified Gen/Veo audio-video director packet, uses Nano Banana Pro / Gemini 3 Pro Image (`gemini_image3_pro`) for the reference board, uses Gen-4.5 (`gen4.5`) for silent cinematic shot studies, and uses Veo 3.1 (`veo3.1`) for the final sound-enabled video.
+This repository now has a runnable FastAPI demo flow for turning one editable audience comment into a creator-approved Runway render. The judge-facing path keeps Director Controls visible but locked, builds the Shorts package server-side, and submits the paid-proven v66 Gen/Veo workflow with one `Generate render` action. The package page then acts as the render monitor until the final MP4 is ready.
 
 ## Local Setup
 
@@ -45,17 +45,13 @@ The repo includes a root [render.yaml](render.yaml) Blueprint for Render. See [d
 
 ## Runway Workflow Submit
 
-The app now includes a dry-run preview and explicit creator-approved submit path for the first published Runway workflow. Until the workflow is created and published in Runway, the package page will show configuration blockers instead of calling the API.
+The checked-in example configuration points to the current paid-proven v66 workflow endpoint, `c1b49d17-c80f-4705-b0e6-86c89a070464`, with its ten TCS input node mappings. The v66 graph uses the Gen/Veo continuity core, Nano Banana Pro / Gemini 3 Pro Image frame generation, photo-enhanced storyboard frames, Veo 3.1 keyframe segments, native audio, and a final 1080x1920 stitched MP4 output.
 
-For standalone image generation, the Runway client supports `POST /v1/text_to_image` with Nano Banana Pro (`gemini_image3_pro`) as the default image model and Nano Banana / Gemini 2.5 Flash (`gemini_2.5_flash`) as the fast fallback. The direct Nano Banana Pro path defaults to the high-resolution portrait ratio `1536:2752`; use `3072:5504` for max-quality previsuals or `768:1344` for quick proofs. The app keeps `1080:1920` as the logical Shorts aspect. Use the returned task id with `GET /v1/tasks/{id}`.
+The intake page's `Generate render` action is the explicit creator-approved paid-generation action. It creates the package and submits the configured workflow in one step. The package page then auto-refreshes the workflow status until Runway returns the MP4, and `Open video` points at the newest workflow output.
 
-For the one-image cinematic proof, the package page includes a separate creator-approved direct generation lane. It starts a Nano Banana Pro first-frame task, then a status refresh advances the completed image into direct `POST /v1/image_to_video` with `gen4.5`, passing the Nano Banana output URL as the `promptImage` first frame and using vertical `720:1280`.
+Add your local Runway secret before submitting paid generations. Until the workflow and secret are configured, the render page shows configuration blockers instead of calling the API.
 
-For the final video, generate and refresh all three Nano Banana board rows first. The final-video button submits Veo 3.1 image-to-video with the board's first hero image as the single public-API prompt image, while the prompt carries the unified AV director packet and the nine-image board plan. Veo 3.1 is the final adapter because the demo output needs native sound.
-
-The checked-in example configuration points to the current paid-proven v66 workflow endpoint, `c1b49d17-c80f-4705-b0e6-86c89a070464`, with its ten TCS input node mappings. Add your local Runway secret before submitting paid generations.
-
-Required local values after publishing a replacement `TCS Gen/Veo Director v2` workflow or compatible board-row workflows:
+Required local values after publishing a replacement `TCS Gen/Veo Director v2` workflow:
 
 ```powershell
 RUNWAYML_HACKATHON_API_SECRET=your_real_hackathon_secret
@@ -63,9 +59,7 @@ RUNWAY_WORKFLOW_ID=published_workflow_uuid
 RUNWAY_WORKFLOW_NODE_MAP_JSON={"av_director_packet":{"node_id":"node-uuid","output_key":"prompt"}}
 ```
 
-The node map must include every logical input listed in [docs/RUNWAY_RESOURCES.md](docs/RUNWAY_RESOURCES.md). The intake page's `Generate render` action is the explicit creator-approved paid-generation action.
-
-On the intake page, `Generate render` creates the package and submits the configured workflow in one step. The package page then auto-refreshes the workflow status until Runway returns the MP4, and `Open video` points at that newest workflow output.
+The node map must include every logical input listed in [docs/RUNWAY_RESOURCES.md](docs/RUNWAY_RESOURCES.md).
 
 The UI does not expose a duration field. The app sends the v66-proven `duration_seconds=4` workflow input, which corresponds to the four 4-second Veo segments stitched into the final short.
 
@@ -108,9 +102,10 @@ The audit should now detect the Python stack and `pyproject.toml`.
 
 ## Next Best Build Step
 
-The first vertical slice, local approval gate, and Runway handoff lanes are in place. The next build step is to configure the local app and run the creator-approved live submit path:
+The first vertical slice, locked demo controls, live Render deployment, and paid-proven v66 workflow path are in place. The next best step is final demo rehearsal:
 
-1. Add the current board-row workflow IDs and `RUNWAY_WORKFLOW_NODE_MAP_JSON` from [docs/RUNWAY_WORKFLOW_BUILD_GUIDE.md](docs/RUNWAY_WORKFLOW_BUILD_GUIDE.md) to local `.env`.
-2. Restart the FastAPI app so settings reload.
-3. Open a package page, generate the nine-image board, refresh until the rows finish, then submit the Veo 3.1 final video after creator approval.
-4. Confirm whether Runway exposes a public Precision v2 upscaler endpoint before adding an automated upscaling step.
+1. Open `https://top-comment-studio.onrender.com/`.
+2. Leave the default audience signal or edit only the selected audience comment.
+3. Click `Generate render` only when ready to spend Runway credits.
+4. Let the render page auto-refresh until `Render ready`, then use `Open video` for the MP4.
+5. Defer the custom domain and any automated upscaling until after final submission unless they become required polish.

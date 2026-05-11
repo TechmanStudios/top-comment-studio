@@ -28,7 +28,7 @@ Use this as the shared task board for humans and AI agents.
 
 | Status | Task | Notes |
 |---|---|---|
-| todo | Define MVP user flow | Keep demo-focused |
+| done | Define MVP user flow | Judge-facing flow is one editable audience comment -> `Generate render` -> render monitor -> `Open video` |
 | done | Add Python/FastAPI scaffold | FastAPI app, templates, storage, sample data, and smoke tests added |
 | done | Implement smallest end-to-end path | Local package generation, creator-approved Runway submit shell, and published workflow config path are implemented |
 | done | Design Runway workflow chain | `TCS Seedance Director v1` contract documented and published in Runway |
@@ -44,10 +44,10 @@ Use this as the shared task board for humans and AI agents.
 
 | Status | Task | Notes |
 |---|---|---|
-| todo | Write demo script | See `docs/DEMO_SCRIPT.md` |
-| todo | Add sample data | No secrets or private data |
+| done | Write demo script | See `docs/DEMO_SCRIPT.md`; updated for one-click Render demo |
+| done | Add sample data | `data/samples/sample_comments.json`; no secrets or private data |
 | todo | Check fresh clone setup | Run from clean environment |
-| todo | Document known limitations | See `KNOWN_ISSUES.md` |
+| done | Document known limitations | See `KNOWN_ISSUES.md`; current demo limitation is that custom controls/upscaling stay deferred |
 
 ## Agent Handoff Notes
 
@@ -59,6 +59,22 @@ YYYY-MM-DD — Agent:
 - Validation:
 - Blockers:
 - Next step:
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Ran the final timed live rehearsal using the new audio-forward audience comment, "Make the storm-powered city use thunder like a drumbeat, with glowing towers pulsing to the music as the AI opens the observatory window." The live app created `episode_006` and submitted Runway invocation `e89145ed-0568-40df-939b-4a2c176bc50b`. The monitor reached 19.2% in about 21 seconds, 55.8% around 2m47s, 90.4% around 6m32s, then briefly showed `Render blocked` at about 7m08s because Runway returned `SUCCEEDED` before its output field had propagated. A later status refresh recovered to `Render ready`, and the embedded MP4 played at 1080x1920 with a 16.09s duration. Added an app-side grace path so fresh `SUCCEEDED` responses with empty output remain in `Rendering` and continue refreshing instead of freezing in a false blocked state.
+- Validation: Live Render page recovered to `Render ready` and exposed `Open video` for `episode_006`; video element reported `readyState=4`, duration `16.09`, width `1080`, height `1920`, and playback active. Direct Runway API retrieval for invocation `e89145ed-0568-40df-939b-4a2c176bc50b` returned `status=SUCCEEDED`, one output key, and zero node errors. Local validation passed with `uv run pytest tests/test_runway_workflow.py -q` at 32 tests, `uv run pytest` at 34 tests, and the v66 workflow verifier command passed with strict continuity/photo-enhancer/keyframe/1080p checks.
+- Blockers: The propagation fix is local until committed, pushed, and redeployed. The current live app can still require one manual status refresh if it hits the same brief `SUCCEEDED`/empty-output window before the fix is deployed.
+- Next step: Commit/push the propagation fix and docs, let Render auto-deploy, then reload `episode_006` or run a no-credit health/homepage check to confirm the new commit is live before final submission.
+```
+
+```text
+2026-05-11 — GitHub Copilot:
+- Summary: Ran an initial demo hardening pass for final submission. Confirmed the repo is still on `main` with `origin/main`, verified the live Render app is serving the simplified one-click intake flow, and updated `README.md`, `docs/DEMO_SCRIPT.md`, `DECISIONS.md`, and this task board so the docs match the deployed `Generate render` -> render monitor -> `Open video` path. No application code or Runway endpoint config changed.
+- Validation: `python scripts/agent_repo_audit.py` completed and regenerated `AI_REPO_AUDIT.md`; `uv sync --frozen` passed; `uv run pytest` passed with 33 tests; `uv run python scripts/verify_runway_workflow_contract.py --strict-defaults --require-continuity-core --require-photo-enhancer-chains --require-seamless-transition-keyframes --require-1080p-video` passed against v66 endpoint `c1b49d17-c80f-4705-b0e6-86c89a070464`; live Render `/health` returned `runway_configured=true` and `runway_workflow_configured=true`; live `/static/app.css` served as `text/css`; homepage check confirmed `Generate render`, locked `Director controls`, no duration field, and no stale render panel. `git diff --check` reported no whitespace errors, only Windows CRLF normalization warnings for edited Markdown files.
+- Blockers: No demo blocker found. A fully separate fresh-clone setup was not run in this pass, and no new paid Runway render was submitted.
+- Next step: Do one final timed rehearsal on `https://top-comment-studio.onrender.com/`, edit only the selected audience comment if desired, and click `Generate render` only when ready to spend Runway credits.
 ```
 
 ```text

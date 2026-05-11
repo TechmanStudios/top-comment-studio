@@ -216,6 +216,7 @@ def test_homepage_has_ready_demo_signal_and_collapsed_controls(monkeypatch, tmp_
     assert response.status_code == 200
     assert "storm-powered city forming in the clouds" in response.text
     assert "Try a real audience comment" in response.text
+    assert "Usual render time: about 7-8 minutes." in response.text
     assert "Director controls" in response.text
     assert "Hackathon demo view only" in response.text
     assert 'name="target_tone" value="curious, cinematic, participatory" readonly' in response.text
@@ -276,6 +277,52 @@ def test_create_package_route_starts_render_without_second_approval(monkeypatch,
     ]["prompt"]["value"]
     assert "custom post-generation branch" not in packet_json
     assert "disruptive audio test" not in packet_json
+
+
+def test_runway_status_waits_for_succeeded_output_propagation(monkeypatch, tmp_path):
+    monkeypatch.setenv("RUNWAYML_HACKATHON_API_SECRET", "test-secret")
+    monkeypatch.setattr(
+        app_module,
+        "settings",
+        Settings(
+            data_dir=tmp_path,
+            runway_workflow_id="workflow-123",
+            runway_workflow_node_map_json=_node_map_json(),
+        ),
+    )
+
+    record = create_episode_record(
+        CommentInput(selected_comment="Make the AI build a floating city powered by storms.")
+    )
+    record.runway = RunwayWorkflowState(
+        workflow_id="workflow-123",
+        invocation_id="invocation-123",
+        status="submitted",
+        submitted_at=app_module.current_timestamp(),
+    )
+    ChainStore(tmp_path).save(record)
+
+    class PropagatingWorkflowClient:
+        def __init__(self, settings: Settings) -> None:
+            self.settings = settings
+
+        def retrieve_workflow_invocation(self, invocation_id: str) -> dict[str, object]:
+            assert invocation_id == "invocation-123"
+            return {"id": invocation_id, "status": "SUCCEEDED", "output": {}}
+
+    monkeypatch.setattr(app_module, "RunwayClient", PropagatingWorkflowClient)
+
+    response = TestClient(app_module.app).get(f"/package/{record.episode_id}/runway-status")
+    updated = ChainStore(tmp_path).get(record.episode_id)
+
+    assert response.status_code == 200
+    assert "Rendering" in response.text
+    assert "Render blocked" not in response.text
+    assert "without exposed workflow outputs" not in response.text
+    assert updated is not None
+    assert updated.runway.status == "processing"
+    assert updated.runway.progress == app_module.WORKFLOW_OUTPUT_PROPAGATION_PROGRESS
+    assert updated.runway.failure == ""
 
 
 def test_direct_generation_blockers_require_approval_secret_and_safe_comment():
